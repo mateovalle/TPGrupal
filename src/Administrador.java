@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Administrador {
     String usuario;
     String contraseña;
-    ArrayList<Administrador> listaDeAdministradores = new ArrayList<Administrador>();
+
 
     public Administrador(String usuario, String contraseña) {
         this.usuario = usuario;
@@ -25,6 +25,5 @@ public class Administrador {
     void bloquearUsuario(Usuario usuario){
         usuario.estaBloqueado = true;
     }
-
 
 }
