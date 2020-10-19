@@ -42,4 +42,15 @@ public class UserManager {
         }
         solicitudes.remove(solicitud);
     }
+    public ArrayList<Solicitud> solicitudesDeUsuario(Usuario usuarioActivo){
+        ArrayList<Solicitud> solicitudesDeUsuario= new ArrayList<Solicitud>();
+        for (int i = 0; i < solicitudes.size(); i++) {
+            if(solicitudes.get(i).recibe.equals(usuarioActivo)){
+                solicitudesDeUsuario.add(solicitudes.get(i));
+            }else{
+                //que siga...   -Timoteo
+            }
+        }
+        return solicitudesDeUsuario;
+    }
 }
