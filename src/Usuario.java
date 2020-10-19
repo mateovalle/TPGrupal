@@ -6,6 +6,7 @@ public class Usuario {
     String zona;
     int solicitudesRechazadas = 0;
     boolean estaBloqueado = false;
+    ArrayList<Sintoma> sintomasActivos;
 
     ArrayList<Usuario> contactosEstrechos = new ArrayList<Usuario>();
 
