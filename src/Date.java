@@ -63,4 +63,9 @@ public class Date {
     public boolean equals(Date otrafecha){
         return this.compareTo(otrafecha) == 0;
     }
+
+    @Override
+    public String toString() {
+        return dia+"/"+mes+"/"+anio;
+    }
 }

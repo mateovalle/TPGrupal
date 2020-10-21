@@ -16,12 +16,15 @@ public class Usuario {
         this.celular = celular;
     }
 
-    public void declararContactoEstrecho(String cuilOCelular, int fecha1, int fecha2){
-        //chequear que no este bloqueado
-        //buscar en la lista el cuil y ver si lo encuentra
-        //si lo encuentra que le mande una solicitud
-        //this.mandarSolicitud(otroUsuario);
-        return;
+    public void declararContactoEstrecho(Solicitud solicitud,  UserManager userManager){
+        if(estaBloqueado){
+            // esta bloqueado y no puede declarar. --Timo
+        }else{
+            userManager.mandarSolicitud(solicitud);
+        }
+    }
+    public void contestarSolicitud(Solicitud solicitud, UserManager userManager, boolean respuesta){
+        userManager.contestarSolicitud(solicitud, respuesta);
     }
 
 }

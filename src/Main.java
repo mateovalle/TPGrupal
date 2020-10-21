@@ -43,28 +43,64 @@ public class Main {
 
     static void menuDeUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) {
         System.out.println("1. Declarar contacto estrecho");
-        System.out.println("2. Chequear solicitudes");
+        System.out.println("2. Revisar y contestar solicitudes de contacto estrecho");
         System.out.println("3. Declarar sintoma");
         System.out.println("4. Eliminar sitnoma");
-        System.out.println("5. Cerrar sesion");
+        System.out.println("5. Ver Mapa");
+        System.out.println("6. Cerrar sesion");
 
         int n = Scanner.getInt("");
 
         switch (n) {
             case 1:
+                //Declarar contacto estrecho
                 String cuilOCelular = Scanner.getString("Ingrese el cuil o celular de la persona con la que tuvo contacto estrecho: ");
-                int fecha1 = Scanner.getInt("Ingrese el primer dia de su encuentro: ");
-                int fecha2 = Scanner.getInt("Ingrese el ultimo dia de su encuentro: ");
                 Usuario otroUsuario = buscarUsuario(cuilOCelular, userManager);
                 if (otroUsuario == null) {
                     System.out.println("No se encontro el usuario.");
                     menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
+                }else{
+                    String fecha1 = Scanner.getString("Ingrese el primer dia de su encuentro, separado por /: ");
+                    String fecha2 = Scanner.getString("Ingrese el ultimo dia de su encuentro, separado por /: ");
+                    Date dateStart= new Date(fecha1);
+                    Date dateEnd= new Date(fecha2);
+                    Solicitud solicitud= new Solicitud(usuarioActivo, otroUsuario, dateStart, dateEnd);
+                    usuarioActivo.declararContactoEstrecho(solicitud, userManager);
+                    menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 }
                 break;
             case 2:
+                //Revisar y contestar Solicitudes
                 ArrayList<Solicitud> solicitudesDeUsuario = userManager.solicitudesDeUsuario(usuarioActivo);
+                for (int i = 0; i < solicitudesDeUsuario.size(); i++) {
+                    System.out.println(solicitudesDeUsuario.get(i).toString());
+                }
+                System.out.println("");
+                int SioNo = Scanner.getInt("Ingrese 0 si desea contestar a alguna solicitud, o ingrese 1 para volver al menu: ");
+                if(SioNo==0) {
+                    for (int i = 0; i < solicitudesDeUsuario.size(); i++) {
+                        System.out.println(i+". "+solicitudesDeUsuario.get(i).toString());
+                    }
+                    int nroDeSolicitud= Scanner.getInt("Que solicitud desea contestar: ");
+                    if(nroDeSolicitud<= solicitudesDeUsuario.size()){
+                        int SioNo2=Scanner.getInt("Ingrese 0 si hubo contacto estrecho, ingrese 1 si no hubo contacto estrecho: ");
+                        Solicitud solicitud= solicitudesDeUsuario.get(nroDeSolicitud);
+                        if(SioNo2==0){
+                            usuarioActivo.contestarSolicitud(solicitud, userManager, true);
+                        }else if(SioNo2== 1){
+                            usuarioActivo.contestarSolicitud(solicitud,userManager, false);
+                        }else {
+                            System.out.println("No ha ingresado un numero valido");
+                            menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
+                        }
+                    }else{
+                        System.out.println("No ha ingresado un numero valido");
+                        menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
+                    }
+                }
                 break;
             case 3:
+                //Declarar Sintoma
                 String nombreSintoma = Scanner.getString("Cual es el nombre del sintoma que desea eliminar");
                 Sintoma sintomaADeclarar = buscarSintoma(nombreSintoma);
                 if (sintomaADeclarar != null) {
@@ -77,6 +113,7 @@ public class Main {
                 break;
 
             case 4:
+                //Eliminar Sintoma
                 String nombre = Scanner.getString("Cual es el nombre del sintoma que desea eliminar");
                 Sintoma sintomaAELiminar = buscarSintoma(nombre);
                 if (sintomaAELiminar != null) {
@@ -85,10 +122,14 @@ public class Main {
                 } else {
                     menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 }
-
             case 5:
-                System.exit(0);
+                //Ver Mapa
+
+            case 6:
+                //Cerrar sesion
+                cerrarSesion();
                 break;
+
             default:
                 System.out.println("Comando invalido, pruebe de nuevo.");
                 menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
@@ -98,13 +139,16 @@ public class Main {
 
     static void menuDeAdministrador(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) {
 
-        System.out.println("1) Crear evento");
-        System.out.println("2) Desbloquear usuario");
-        System.out.println("3) Volver al inicio");
+        System.out.println("1. Crear evento");
+        System.out.println("2. Desbloquear usuario");
+        System.out.println("3. Volver al inicio");
+        System.out.println("4. Ver Mapa");
+        System.out.println("5. Cerrar Sesion");
         int opcion = Scanner.getInt("Introduzca el numero de opción: ");
 
         switch (opcion) {
             case 1:
+                //Crear Evento
                 String nombre = Scanner.getString("Introduzca el nombre del sintoma: ");
                 Sintoma Sintoma = buscarSintoma(nombre);
                 if (Sintoma == null) {
@@ -113,17 +157,25 @@ public class Main {
                     System.out.println("El sintoma creado ya existe.");
                     menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
                 }
-
                 break;
 
             case 2:
+                //Desbloquear Usuario
                 String cuiloCelular = Scanner.getString("introduzca el Cuil o el Celular del usuario a desbloquear: ");
                 Usuario usuarioaDesbloquear = buscarUsuario(cuiloCelular, userManager);
                 administradorActivo.desbloquearUsuario(usuarioaDesbloquear);
                 break;
 
             case 3:
+                //Volver al Inicio
                 inicio(userManager, anses, usuarioActivo, administradorActivo);
+
+            case 4:
+                //Ver Mapa
+
+            case 5:
+                //Cerrar Sesion
+                cerrarSesion();
             default:
                 System.out.println("El valor ingresado no corresponde a ninguna opción, intente nuevamente");
                 menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
@@ -171,6 +223,7 @@ public class Main {
     static void crearNuevoUsuario(UserManager userManager, ArrayList<String> anses) {
         String cuilOCelular = Scanner.getString("Ingrese su numero de telefono o cuil: ");
         for (int i = 0; i < anses.size(); i++) {
+            //validar si no esta en la lista de usuarios creados
             //validar en el anses
             //escribir en el archivo
         }
@@ -236,8 +289,15 @@ public class Main {
 
    //Eliminadores
 
-    private static void eliminarSintoma(Sintoma sintoma, Usuario usuarioActivo) {
+    public static void eliminarSintoma(Sintoma sintoma, Usuario usuarioActivo) {
         usuarioActivo.sintomasActivos.remove(sintoma);
+    }
+
+    //Cerrar Sesion
+    public static void cerrarSesion(){
+        //cerrar sesion guardando
+        System.out.println("¡Gracias por usar nuestro programa!");
+        System.exit(0);
     }
 
     /*Crear nuevo usario

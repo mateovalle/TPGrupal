@@ -20,8 +20,7 @@ public class UserManager {
         listaDeAdministradores.add(administrador);
     }
 
-    public void mandarSolicitud(Usuario envia, Usuario recibe, int fecha1, int fecha2){
-        Solicitud solicitud = new Solicitud(envia, recibe, fecha1, fecha2);
+    public void mandarSolicitud(Solicitud solicitud){
         solicitudes.add(solicitud);
     }
 
