@@ -1,3 +1,5 @@
+import util.Scanner;
+
 import java.util.ArrayList;
 
 public class Administrador {
@@ -10,13 +12,6 @@ public class Administrador {
         this.contraseña = contraseña;
     }
 
-    void declararSintomas(String nombre, ArrayList<Enfermedad> enfermedades){
-        Sintoma sintoma = new Sintoma(nombre);
-        for (int i = 0; i < enfermedades.size(); i++) {
-            enfermedades.get(i).sintomas.add(sintoma);
-        }
-    }
-
     void desbloquearUsuario(Usuario usuario){
         usuario.solicitudesRechazadas = 0;
         usuario.estaBloqueado = false;
@@ -26,4 +21,19 @@ public class Administrador {
         usuario.estaBloqueado = true;
     }
 
+    void crearSintoma(String nombre) {
+        Sintoma sintomaNuevo = new Sintoma(nombre);
+        int perteneceAEnfermedad = Scanner.getInt("A cuantas enfermedades pertenece?: ");
+        for (int i = 0; i < perteneceAEnfermedad - 1; i++) {
+            String nombreEnfermedad = Scanner.getString("Introduzca el nombre de la enfermedad");
+            Enfermedad enfermedad = Main.buscarEnfermedad(nombreEnfermedad);
+            if (enfermedad != null) {
+                enfermedad.sintomas.add(sintomaNuevo);
+                sintomaNuevo.enfermedadesRelacionadas.add(enfermedad);
+                //agregar al archivo
+            } else {
+                crearSintoma(nombre);
+            }
+        }
+    }
 }
