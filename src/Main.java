@@ -2,18 +2,22 @@ import java.util.ArrayList;
 import util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    static FileManager ansesReader = new FileManager("src/ANSES");
+    static FileManager userReader = new FileManager("src/Users");
+    public static void main(String[] args) throws Exception {
         ArrayList<String> anses = new ArrayList<>();
         Administrador administradorActivo = null;
         Usuario usuarioActivo = null;
         UserManager userManager = new UserManager();
         Administrador administrador = new Administrador("hola", "1234");
-        inicio(userManager, anses, usuarioActivo, administradorActivo);
+
+        //FileReader enfermedadesReader = new FileReader("src/Users");
+        inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
 
     }
     //Menus
 
-    static void inicio(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) {
+    static void inicio(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo, FileManager ansesReader) throws Exception{
         System.out.println("1. Ingresar como administrador");
         System.out.println("2.Ingresar como usuario");
         System.out.println("3. Crear un nuevo usuario");
@@ -29,14 +33,14 @@ public class Main {
                 entrarComoUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 break;
             case 3:
-                crearNuevoUsuario(userManager, anses);
+                crearNuevoUsuario(userManager, ansesReader,"src/Users");
                 break;
             case 4:
-                cerrarSesion();
+                System.exit(0);
                 break;
             default:
                 System.out.println("Comando invalido, pruebe de nuevo.");
-                inicio(userManager, anses, usuarioActivo, administradorActivo);
+                inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
                 break;
         }
     }
@@ -45,7 +49,7 @@ public class Main {
         System.out.println("1. Declarar contacto estrecho");
         System.out.println("2. Revisar y contestar solicitudes de contacto estrecho");
         System.out.println("3. Declarar sintoma");
-        System.out.println("4. Eliminar sintoma");
+        System.out.println("4. Eliminar sitnoma");
         System.out.println("5. Ver Mapa");
         System.out.println("6. Cerrar sesion");
 
@@ -137,8 +141,9 @@ public class Main {
         }
     }
 
-    static void menuDeAdministrador(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) {
-        System.out.println("1. Crear Sintoma");
+    static void menuDeAdministrador(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception {
+
+        System.out.println("1. Crear evento");
         System.out.println("2. Desbloquear usuario");
         System.out.println("3. Volver al inicio");
         System.out.println("4. Ver Mapa");
@@ -147,11 +152,11 @@ public class Main {
 
         switch (opcion) {
             case 1:
-                //Crear Sintoma
+                //Crear Evento
                 String nombre = Scanner.getString("Introduzca el nombre del sintoma: ");
-                Sintoma sintoma = buscarSintoma(nombre);
-                if (sintoma == null) {
-                    administradorActivo.crearSintoma(nombre);
+                Sintoma Sintoma = buscarSintoma(nombre);
+                if (Sintoma == null) {
+                    crearSintoma(nombre);
                 } else {
                     System.out.println("El sintoma creado ya existe.");
                     menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
@@ -167,7 +172,7 @@ public class Main {
 
             case 3:
                 //Volver al Inicio
-                inicio(userManager, anses, usuarioActivo, administradorActivo);
+                inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
 
             case 4:
                 //Ver Mapa
@@ -185,7 +190,7 @@ public class Main {
     //Ingresar Como
 
     static void entrarComoAdministrador(UserManager userManager, ArrayList<String> anses, Usuario
-            usuarioActivo, Administrador administradorActivo) {
+            usuarioActivo, Administrador administradorActivo) throws Exception {
         String usuario = Scanner.getString("Ingrese su nombre de usuario: ");
         for (int i = 0; i < userManager.listaDeAdministradores.size(); i++) {
             if (usuario.equals(userManager.listaDeAdministradores.get(i).usuario)) {
@@ -195,36 +200,55 @@ public class Main {
                     menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
                 } else {
                     System.out.println("Contraseña incorrecta");
-                    inicio(userManager, anses, usuarioActivo, administradorActivo);
+                    inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
                 }
             } else {
                 System.out.println("No se encontro un usuario con ese nombre.");
-                inicio(userManager, anses, usuarioActivo, administradorActivo);
+                inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
             }
         }
 
     }
 
-    static void entrarComoUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) {
+    static void entrarComoUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception {
         String cuilOContraseña = Scanner.getString("Ingrese su cuil o celular");
         for (int i = 0; i < userManager.listaDeUsuarios.size(); i++) {
             if (cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).celular) || cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).cuil)) {
                 usuarioActivo = userManager.listaDeUsuarios.get(i);
                 menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
             } else {
-                inicio(userManager, anses, usuarioActivo, administradorActivo);
+                inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
             }
         }
     }
 
     //Creadores
 
-    static void crearNuevoUsuario(UserManager userManager, ArrayList<String> anses) {
+    static void crearNuevoUsuario(UserManager userManager, FileManager ansesReader, String filePath) throws Exception{
         String cuilOCelular = Scanner.getString("Ingrese su numero de telefono o cuil: ");
-        for (int i = 0; i < anses.size(); i++) {
-            //validar si no esta en la lista de usuarios creados
-            //validar en el anses
-            //escribir en el archivo
+        if(buscarUsuario(cuilOCelular,userManager)!=null){
+            //inicio(userManager,anses,*****,******);  <-- Completar - Pedro,Timoteo y Mateo
+        } else {
+            String[] datosAnses = buscarEnAnses(cuilOCelular,ansesReader);
+            if(datosAnses != null){
+                userManager.crearUsuario(datosAnses[0],datosAnses[1],datosAnses[2],datosAnses[3]);
+                ansesReader.writeUsersToFile(datosAnses,filePath);
+            }
+        }
+    }
+
+    static void crearSintoma(String nombre) {
+        Sintoma sintomaNuevo = new Sintoma(nombre);
+        int perteneceAEnfermedad = Scanner.getInt("A cuantas enfermedades pertenece?: ");
+        for (int i = 0; i < perteneceAEnfermedad - 1; i++) {
+            String nombreEnfermedad = Scanner.getString("Introduzca el nombre de la enfermedad");
+            Enfermedad enfermedad = buscarEnfermedad(nombreEnfermedad);
+            if (enfermedad != null) {
+                enfermedad.sintomas.add(sintomaNuevo);
+                //agregar al archivo
+            } else {
+                crearSintoma(nombre);
+            }
         }
     }
 
@@ -251,24 +275,34 @@ public class Main {
     }
 
     static Sintoma buscarSintoma(String nombre) {
-        for (int i = 0; i < EnfermedadesABM.listaDeSintomas.size(); i++) {
-            if(EnfermedadesABM.listaDeSintomas.get(i).equals(nombre)){
-                return EnfermedadesABM.listaDeSintomas.get(i);
+        /*for (int i = 0; i < algo.listaDeSintomas.size(); i++) {
+            if(algo.listaDeSintomas.get(i).equals(nombre)){
+                return algo.listaDeSintomas.get(i);
             }else{
                 //que siga buscando. -Timoteo
             }
-            }
+            }*/
         return null;
     }
     static Enfermedad buscarEnfermedad(String nombre) {
-        for (int i = 0; i < EnfermedadesABM.listaDeEnfermedades.size(); i++) {
-            if(EnfermedadesABM.listaDeEnfermedades.get(i).equals(nombre)){
-                return EnfermedadesABM.listaDeEnfermedades.get(i);
-            }else{
+//        for (int i = 0; i < algo.listaDeEnfermedad.size(); i++) {
+//            if(algo.listaDeEnfermedad.get(i).equals(nombre)){
+//                return algo.listaDeEnfermedad.get(i);
+//            }else{
         //que siga buscando. -Timoteo
-            }
-        }
+//            }
+//        }
         return null;
+   }
+
+   static String[] buscarEnAnses(String cuilOCelular, FileManager ansesReader) throws Exception{
+        ArrayList<String[]> lista = ansesReader.getDataFromFile();
+       for (int i = 0; i < lista.size(); i++) {
+           if(lista.get(i)[0].equals(cuilOCelular) || lista.get(i)[1].equals(cuilOCelular)){
+               return lista.get(i);
+           }
+       }
+       return null;
    }
 
    //Eliminadores

@@ -9,9 +9,8 @@ public class UserManager {
 
     }
 
-    public void crearUsuario(String cuil, String celular, String zona){
-        //validar en la lista del anses
-        Usuario usuario = new Usuario(cuil, celular, zona);
+    public void crearUsuario(String cuil, String celular, String zona,String nombre){
+        Usuario usuario = new Usuario(cuil, celular, zona, nombre);
         listaDeUsuarios.add(usuario);
     }
 
