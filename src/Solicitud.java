@@ -13,6 +13,6 @@ public class Solicitud {
 
     @Override
     public String toString() {
-        return envia.toString()+ " ha declarado contacto estrecho contigo desde"+ fecha1.toString()+" hasta "+fecha2.toString();
+        return envia.nombre + " ha declarado contacto estrecho contigo desde "+ fecha1.toString()+" hasta "+fecha2.toString();
     }
 }

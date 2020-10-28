@@ -4,12 +4,17 @@ import util.Scanner;
 public class Main {
     static FileManager ansesReader = new FileManager("src/ANSES");
     static FileManager userReader = new FileManager("src/Users");
+    static FileManager adminReader = new FileManager("src/Administradores");
+    static FileManager solicitudReader = new FileManager("src/Solicitudes");
     public static void main(String[] args) throws Exception {
         ArrayList<String> anses = new ArrayList<>();
         Administrador administradorActivo = null;
         Usuario usuarioActivo = null;
         UserManager userManager = new UserManager();
-        Administrador administrador = new Administrador("hola", "1234");
+        userManager.agregarUsuariosALista(userReader.getDataFromFile());
+        userManager.agregarAdminALista(adminReader.getDataFromFile());
+        userManager.agregarSolictudALista(solicitudReader.getDataFromFile());
+        userManager.repartirSolicitudes();
 
         //FileReader enfermedadesReader = new FileReader("src/Users");
         inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
@@ -19,7 +24,7 @@ public class Main {
 
     static void inicio(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo, FileManager ansesReader) throws Exception{
         System.out.println("1. Ingresar como administrador");
-        System.out.println("2.Ingresar como usuario");
+        System.out.println("2. Ingresar como usuario");
         System.out.println("3. Crear un nuevo usuario");
         System.out.println("4. Salir");
 
@@ -49,7 +54,7 @@ public class Main {
         System.out.println("1. Declarar contacto estrecho");
         System.out.println("2. Revisar y contestar solicitudes de contacto estrecho");
         System.out.println("3. Declarar sintoma");
-        System.out.println("4. Eliminar sitnoma");
+        System.out.println("4. Eliminar sintoma");
         System.out.println("5. Ver Mapa");
         System.out.println("6. Cerrar sesion");
 
@@ -58,41 +63,47 @@ public class Main {
         switch (n) {
             case 1:
                 //Declarar contacto estrecho
-                String cuilOCelular = Scanner.getString("Ingrese el cuil o celular de la persona con la que tuvo contacto estrecho: ");
-                Usuario otroUsuario = buscarUsuario(cuilOCelular, userManager);
-                if (otroUsuario == null) {
-                    System.out.println("No se encontro el usuario.");
+                if(usuarioActivo.estaBloqueado){
+                    System.out.println("Estás bloqueado, no puedes mandar solicitudes.");
                     menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
-                }else{
-                    String fecha1 = Scanner.getString("Ingrese el primer dia de su encuentro, separado por /: ");
-                    String fecha2 = Scanner.getString("Ingrese el ultimo dia de su encuentro, separado por /: ");
-                    Date dateStart= new Date(fecha1);
-                    Date dateEnd= new Date(fecha2);
-                    Solicitud solicitud= new Solicitud(usuarioActivo, otroUsuario, dateStart, dateEnd);
-                    usuarioActivo.declararContactoEstrecho(solicitud, userManager);
-                    menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
+                }else {
+                    String cuilOCelular = Scanner.getString("Ingrese el cuil o celular de la persona con la que tuvo contacto estrecho: ");
+                    Usuario otroUsuario = buscarUsuario(cuilOCelular, userManager);
+                    if (otroUsuario == null) {
+                        System.out.println("No se encontro el usuario.");
+                        menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
+                    } else {
+                        String fecha1 = Scanner.getString("Ingrese el primer dia de su encuentro, separado por /: ");
+                        String fecha2 = Scanner.getString("Ingrese el ultimo dia de su encuentro, separado por /: ");
+                        Date dateStart = new Date(fecha1);
+                        Date dateEnd = new Date(fecha2);
+                        Solicitud solicitud = new Solicitud(usuarioActivo, otroUsuario, dateStart, dateEnd);
+                        usuarioActivo.declararContactoEstrecho(solicitud, userManager);
+                        solicitudReader.writeSolicitudToFile(solicitud,userManager.solicitudes);
+                        menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
+                    }
                 }
                 break;
             case 2:
                 //Revisar y contestar Solicitudes
-                ArrayList<Solicitud> solicitudesDeUsuario = userManager.solicitudesDeUsuario(usuarioActivo);
-                for (int i = 0; i < solicitudesDeUsuario.size(); i++) {
-                    System.out.println(solicitudesDeUsuario.get(i).toString());
+                for (int i = 0; i < usuarioActivo.solicitudesRecibidas.size(); i++) {
+                    System.out.println(usuarioActivo.solicitudesRecibidas.get(i).toString());
                 }
                 System.out.println("");
                 int SioNo = Scanner.getInt("Ingrese 0 si desea contestar a alguna solicitud, o ingrese 1 para volver al menu: ");
                 if(SioNo==0) {
-                    for (int i = 0; i < solicitudesDeUsuario.size(); i++) {
-                        System.out.println(i+". "+solicitudesDeUsuario.get(i).toString());
+                    for (int i = 0; i < usuarioActivo.solicitudesRecibidas.size(); i++) {
+                        System.out.println(i+". "+usuarioActivo.solicitudesRecibidas.get(i).toString());
                     }
                     int nroDeSolicitud= Scanner.getInt("Que solicitud desea contestar: ");
-                    if(nroDeSolicitud<= solicitudesDeUsuario.size()){
+                    if(nroDeSolicitud<= usuarioActivo.solicitudesRecibidas.size()){
                         int SioNo2=Scanner.getInt("Ingrese 0 si hubo contacto estrecho, ingrese 1 si no hubo contacto estrecho: ");
-                        Solicitud solicitud= solicitudesDeUsuario.get(nroDeSolicitud);
+                        Solicitud solicitud= usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud);
                         if(SioNo2==0){
                             usuarioActivo.contestarSolicitud(solicitud, userManager, true);
                         }else if(SioNo2== 1){
                             usuarioActivo.contestarSolicitud(solicitud,userManager, false);
+                            //userReader.updateUserFromFile(usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud).envia);
                         }else {
                             System.out.println("No ha ingresado un numero valido");
                             menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
@@ -192,21 +203,17 @@ public class Main {
     static void entrarComoAdministrador(UserManager userManager, ArrayList<String> anses, Usuario
             usuarioActivo, Administrador administradorActivo) throws Exception {
         String usuario = Scanner.getString("Ingrese su nombre de usuario: ");
+        String contraseña = Scanner.getString("Ingrese su contraseña: ");
         for (int i = 0; i < userManager.listaDeAdministradores.size(); i++) {
             if (usuario.equals(userManager.listaDeAdministradores.get(i).usuario)) {
-                String contraseña = Scanner.getString("Ingrese su contraseña");
                 if (contraseña.equals(userManager.listaDeAdministradores.get(i).contraseña)) {
                     administradorActivo = buscarAdministrador(usuario, contraseña, userManager);
                     menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
-                } else {
-                    System.out.println("Contraseña incorrecta");
-                    inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
                 }
-            } else {
-                System.out.println("No se encontro un usuario con ese nombre.");
-                inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
             }
         }
+        System.out.println("Usuario o contraseña incorrecta.");
+        inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
 
     }
 
@@ -216,10 +223,9 @@ public class Main {
             if (cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).celular) || cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).cuil)) {
                 usuarioActivo = userManager.listaDeUsuarios.get(i);
                 menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
-            } else {
-                inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
             }
         }
+        inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
     }
 
     //Creadores

@@ -23,13 +23,49 @@ public class FileManager {
         return lista;
     }
 
-
     void writeUsersToFile(String[] array, String newFilePath){
         try{
             BufferedWriter bWriter = new BufferedWriter(new FileWriter(newFilePath, true)) ;
-            bWriter.write("\n" + array[3] + "," + array[0] + "," + array[1] + "," + array[2] + "," + "0" + ",");
+            bWriter.write("\n" + array[0] + "," + array[1] + "," + array[2] + "," + array[3] + "," + "0");
             bWriter.close();
         } catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+/*
+    void updateUserFromFile(Usuario usuario){
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            BufferedWriter bWriter = new BufferedWriter(new FileWriter(filePath));
+
+            String lineToRemove = usuario.cuil + usuario.celular + usuario.zona + usuario.nombre + (usuario.solicitudesRechazadas - 1);
+            String currentLine;
+
+            while((currentLine = reader.readLine()) != null) {
+                String lineaRecortada = currentLine.trim();
+                if(lineaRecortada.equals(lineToRemove)) continue;
+                bWriter.write(lineaRecortada);
+            }
+            bWriter.write("\n" + usuario.cuil + "," + usuario.celular + "," + usuario.zona + "," + usuario.nombre + "," + usuario.solicitudesRechazadas);
+            bWriter.close();
+            reader.close();
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+*/
+    void writeSolicitudToFile(Solicitud solicitud,ArrayList<Solicitud> listaSolicitudes){
+        try {
+            BufferedWriter bWriter = new BufferedWriter(new FileWriter(filePath, true));
+            for (int i = 0; i < listaSolicitudes.size(); i++) {
+                String cuilEnvia = listaSolicitudes.get(i).envia.cuil;
+                String cuilRecibe = listaSolicitudes.get(i).recibe.cuil;
+                String fecha1 = listaSolicitudes.get(i).fecha1.toString();
+                String fecha2 = listaSolicitudes.get(i).fecha2.toString();
+                bWriter.write("\n"+cuilEnvia+ ","+cuilRecibe+","+fecha1+","+fecha2);
+            }
+            bWriter.close();
+        }catch (Exception e){
             System.out.println(e);
         }
     }

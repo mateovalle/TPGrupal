@@ -6,11 +6,10 @@ public class UserManager {
     ArrayList<Solicitud> solicitudes = new ArrayList<Solicitud>();
 
     public UserManager(){
-
     }
 
     public void crearUsuario(String cuil, String celular, String zona,String nombre){
-        Usuario usuario = new Usuario(cuil, celular, zona, nombre);
+        Usuario usuario = new Usuario(cuil, celular, zona, nombre, 0);
         listaDeUsuarios.add(usuario);
     }
 
@@ -23,32 +22,36 @@ public class UserManager {
         solicitudes.add(solicitud);
     }
 
-    public void contestarSolicitud(Solicitud solicitud, boolean respuesta){
-        Usuario envia = solicitud.envia;
-        Usuario recibe = solicitud.recibe;
-        if (respuesta){
-            recibe.contactosEstrechos.add(envia);
-            envia.contactosEstrechos.add(recibe);
-            if (envia.solicitudesRechazadas > 0 && envia.solicitudesRechazadas < 5){
-                envia.solicitudesRechazadas--;
-            }
-        } else {
-            envia.solicitudesRechazadas++;
-            if (envia.solicitudesRechazadas > 4){
-                envia.estaBloqueado = true;
-            }
-        }
-        solicitudes.remove(solicitud);
+    public void setListaDeUsuarios(ArrayList<Usuario> listaDeUsuarios) {
+        this.listaDeUsuarios = listaDeUsuarios;
     }
-    public ArrayList<Solicitud> solicitudesDeUsuario(Usuario usuarioActivo){
-        ArrayList<Solicitud> solicitudesDeUsuario= new ArrayList<Solicitud>();
-        for (int i = 0; i < solicitudes.size(); i++) {
-            if(solicitudes.get(i).recibe.equals(usuarioActivo)){
-                solicitudesDeUsuario.add(solicitudes.get(i));
-            }else{
-                //que siga...   -Timoteo
-            }
+
+    public void agregarUsuariosALista(ArrayList<String[]> infoDeUsuarios){
+        for (int i = 1; i < infoDeUsuarios.size(); i++) {
+            Usuario usuario= new Usuario(infoDeUsuarios.get(i)[0],infoDeUsuarios.get(i)[1],infoDeUsuarios.get(i)[2],infoDeUsuarios.get(i)[3],Integer.parseInt(infoDeUsuarios.get(i)[4]));
+            listaDeUsuarios.add(usuario);
         }
-        return solicitudesDeUsuario;
+    }
+
+    public void agregarAdminALista(ArrayList<String[]> infoDeAdmin){
+        for (int i = 1; i < infoDeAdmin.size(); i++) {
+            Administrador administrador= new Administrador(infoDeAdmin.get(i)[0],infoDeAdmin.get(i)[1]);
+            listaDeAdministradores.add(administrador);
+        }
+    }
+    public void agregarSolictudALista(ArrayList<String[]> infoDeSolicitud){
+        for (int i = 1; i < infoDeSolicitud.size(); i++) {
+            Date fecha1 = new Date(infoDeSolicitud.get(i)[2]);
+            Date fecha2 = new Date(infoDeSolicitud.get(i)[3]);
+            Usuario envia = Main.buscarUsuario(infoDeSolicitud.get(i)[0],this);
+            Usuario recibe = Main.buscarUsuario(infoDeSolicitud.get(i)[1],this);
+            Solicitud solicitud= new Solicitud(envia,recibe,fecha1,fecha2);
+            solicitudes.add(solicitud);
+        }
+    }
+    public void repartirSolicitudes(){
+        for (int i = 0; i < solicitudes.size(); i++) {
+            solicitudes.get(i).recibe.solicitudesRecibidas.add(solicitudes.get(i));
+        }
     }
 }
