@@ -50,7 +50,7 @@ public class Main {
         }
     }
 
-    static void menuDeUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) {
+    static void menuDeUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception {
         System.out.println("1. Declarar contacto estrecho");
         System.out.println("2. Revisar y contestar solicitudes de contacto estrecho");
         System.out.println("3. Declarar sintoma");
@@ -103,7 +103,7 @@ public class Main {
                             usuarioActivo.contestarSolicitud(solicitud, userManager, true);
                         }else if(SioNo2== 1){
                             usuarioActivo.contestarSolicitud(solicitud,userManager, false);
-                            //userReader.updateUserFromFile(usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud).envia);
+                            userReader.updateUserFromFile(usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud).envia);
                         }else {
                             System.out.println("No ha ingresado un numero valido");
                             menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
@@ -116,7 +116,7 @@ public class Main {
                 break;
             case 3:
                 //Declarar Sintoma
-                String nombreSintoma = Scanner.getString("Cual es el nombre del sintoma que desea eliminar");
+                String nombreSintoma = Scanner.getString("¿Cual es el nombre del sintoma que desea eliminar? ");
                 Sintoma sintomaADeclarar = buscarSintoma(nombreSintoma);
                 if (sintomaADeclarar != null) {
                     usuarioActivo.sintomasActivos.add(sintomaADeclarar);
@@ -129,7 +129,7 @@ public class Main {
 
             case 4:
                 //Eliminar Sintoma
-                String nombre = Scanner.getString("Cual es el nombre del sintoma que desea eliminar");
+                String nombre = Scanner.getString("¿Cual es el nombre del sintoma que desea eliminar?");
                 Sintoma sintomaAELiminar = buscarSintoma(nombre);
                 if (sintomaAELiminar != null) {
                     eliminarSintoma(sintomaAELiminar, usuarioActivo);
@@ -218,7 +218,7 @@ public class Main {
     }
 
     static void entrarComoUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception {
-        String cuilOContraseña = Scanner.getString("Ingrese su cuil o celular");
+        String cuilOContraseña = Scanner.getString("Ingrese su cuil o celular: ");
         for (int i = 0; i < userManager.listaDeUsuarios.size(); i++) {
             if (cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).celular) || cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).cuil)) {
                 usuarioActivo = userManager.listaDeUsuarios.get(i);
@@ -245,7 +245,7 @@ public class Main {
 
     static void crearSintoma(String nombre) {
         Sintoma sintomaNuevo = new Sintoma(nombre);
-        int perteneceAEnfermedad = Scanner.getInt("A cuantas enfermedades pertenece?: ");
+        int perteneceAEnfermedad = Scanner.getInt("A cuantas enfermedades pertenece? ");
         for (int i = 0; i < perteneceAEnfermedad - 1; i++) {
             String nombreEnfermedad = Scanner.getString("Introduzca el nombre de la enfermedad");
             Enfermedad enfermedad = buscarEnfermedad(nombreEnfermedad);
