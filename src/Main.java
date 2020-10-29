@@ -116,10 +116,12 @@ public class Main {
                 break;
             case 3:
                 //Declarar Sintoma
-                String nombreSintoma = Scanner.getString("Cual es el nombre del sintoma que desea eliminar");
+                String nombreSintoma = Scanner.getString("Cual es el nombre del sintoma que desea declarar");
+                String fecha = Scanner.getString("Ingrese la fecha de hoy separado por '/'");
+                Date fechaDelSintoma = new Date(fecha);
                 Sintoma sintomaADeclarar = buscarSintoma(nombreSintoma);
                 if (sintomaADeclarar != null) {
-                    usuarioActivo.sintomasActivos.add(sintomaADeclarar);
+                    usuarioActivo.declararSintoma(fechaDelSintoma,nombreSintoma, userManager);
                     break;
                 } else {
                     menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
@@ -132,7 +134,7 @@ public class Main {
                 String nombre = Scanner.getString("Cual es el nombre del sintoma que desea eliminar");
                 Sintoma sintomaAELiminar = buscarSintoma(nombre);
                 if (sintomaAELiminar != null) {
-                    eliminarSintoma(sintomaAELiminar, usuarioActivo);
+                    usuarioActivo.darDeBajaSintoma(sintomaAELiminar);
                     break;
                 } else {
                     menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
@@ -167,7 +169,7 @@ public class Main {
                 String nombre = Scanner.getString("Introduzca el nombre del sintoma: ");
                 Sintoma Sintoma = buscarSintoma(nombre);
                 if (Sintoma == null) {
-                    crearSintoma(nombre);
+                    administradorActivo.crearSintoma(nombre);
                 } else {
                     System.out.println("El sintoma creado ya existe.");
                     menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
@@ -243,20 +245,6 @@ public class Main {
         }
     }
 
-    static void crearSintoma(String nombre) {
-        Sintoma sintomaNuevo = new Sintoma(nombre);
-        int perteneceAEnfermedad = Scanner.getInt("A cuantas enfermedades pertenece?: ");
-        for (int i = 0; i < perteneceAEnfermedad - 1; i++) {
-            String nombreEnfermedad = Scanner.getString("Introduzca el nombre de la enfermedad");
-            Enfermedad enfermedad = buscarEnfermedad(nombreEnfermedad);
-            if (enfermedad != null) {
-                enfermedad.sintomas.add(sintomaNuevo);
-                //agregar al archivo
-            } else {
-                crearSintoma(nombre);
-            }
-        }
-    }
 
     //Buscadores
 
@@ -310,12 +298,6 @@ public class Main {
        }
        return null;
    }
-
-   //Eliminadores
-
-    public static void eliminarSintoma(Sintoma sintoma, Usuario usuarioActivo) {
-        usuarioActivo.sintomasActivos.remove(sintoma);
-    }
 
     //Cerrar Sesion
     public static void cerrarSesion(){

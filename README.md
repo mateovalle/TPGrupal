@@ -9,7 +9,7 @@ Integrantes:
 28/10
 * Implementamos:
           - Menues
-          - Brotes
+          - Brote
           - Solicitudes de Contacto Esrecho
           - clase 'Date'
           

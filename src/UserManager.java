@@ -54,4 +54,23 @@ public class UserManager {
             solicitudes.get(i).recibe.solicitudesRecibidas.add(solicitudes.get(i));
         }
     }
+
+    public void mandarAdvertencia (ArrayList<Usuario> usuarios, Date fecha, Usuario usuarioContagiado){ // agrega advertencia al la lista de advertencias del usuario con el que estuvo
+        Advertencia advertencia = new Advertencia(usuarioContagiado, fecha);
+        for (int i = 0; i < usuarios.size(); i++) {
+            usuarios.get(i).advertencias.add(advertencia);
+        }
+    }
+
+    public ArrayList<Usuario> usuariosContagiados (Sintoma sintoma, ArrayList<Usuario> usuariosConLosQueEstuvo) { // los sintomas que dos usuarios comparten entre las 48h
+        ArrayList<Usuario> usuariosContagiados = new ArrayList<>();
+        for (int i = 0; i < usuariosConLosQueEstuvo.size(); i++) {
+            for (int j = 0; j < usuariosConLosQueEstuvo.get(i).sintomasActivos.size(); j++) {
+                if (usuariosConLosQueEstuvo.get(i).sintomasActivos.get(j).getNombreDelSintoma().equals(sintoma.nombre)) {
+                    usuariosContagiados.add(usuariosConLosQueEstuvo.get(i));
+                }
+            }
+        } return usuariosContagiados;
+    }
+
 }

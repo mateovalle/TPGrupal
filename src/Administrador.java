@@ -23,8 +23,8 @@ public class Administrador {
 
     void crearSintoma(String nombre) {
         Sintoma sintomaNuevo = new Sintoma(nombre);
-        int perteneceAEnfermedad = Scanner.getInt("A cuantas enfermedades pertenece?: ");
-        for (int i = 0; i < perteneceAEnfermedad - 1; i++) {
+        int cantidadDeEnfermedades = Scanner.getInt("A cuantas enfermedades pertenece?: ");
+        for (int i = 0; i < cantidadDeEnfermedades - 1; i++) {
             String nombreEnfermedad = Scanner.getString("Introduzca el nombre de la enfermedad");
             Enfermedad enfermedad = Main.buscarEnfermedad(nombreEnfermedad);
             if (enfermedad != null) {
