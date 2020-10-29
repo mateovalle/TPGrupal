@@ -53,7 +53,7 @@ public class Usuario {
             if (declaraMasDeDosSintomasEnUnDia(nuevoSintomaActivo)) {
                 ArrayList <Usuario> usuariosConLosQueEstuvo = usuariosConLosQueEstuvoEnLas48h(solicitudesEnLas48h(nuevoSintomaActivo));
                 userManager.mandarAdvertencia(usuariosConLosQueEstuvo,fechaDeIngresoDeSintoma, this);
-                // recore el arraylist de contacos estrechos, se fija si la date del encuentro esta en las 48 de declaracion de sintoma --> mandar advertencia
+                // recorre el arraylist de contacos estrechos, se fija si la date del encuentro esta en las 48 de declaracion de sintoma --> mandar advertencia
                 ArrayList<Usuario> usuariosContagiados = userManager.usuariosContagiados(sintomaADeclarar, usuariosConLosQueEstuvo);
                 EnfermedadesABM.chequearQueExisteBrote(usuariosContagiados, nuevoSintomaActivo);
             }
@@ -74,15 +74,15 @@ public class Usuario {
 
     public boolean declaraMasDeDosSintomasEnUnDia (SintomaActivo ultimoSintoma) {
         SintomaActivo anteUltimoSintoma = sintomasActivos.get(sintomasActivos.size() - 2); // anteultimo sintoma
-        SintomaActivo antePenultimoSintoma = sintomasActivos.get(sintomasActivos.size() - 3); // comprobar --> quiero el antepenultimo de la lista pq acabo de agregar uno
+        SintomaActivo antePenultimoSintoma = sintomasActivos.get(sintomasActivos.size() - 3); // comprobar --> quiero el antepenultimo de la lista porque acabo de agregar uno
         if (ultimoSintoma.getFechaDeIngresoDeSintoma() == anteUltimoSintoma.getFechaDeIngresoDeSintoma()) {
-            // quiero q sean diferentes pq si es igual ya le mande una notificacion antes
+            // quiero que sean diferentes porque si es igual ya le mande una notificacion antes
             return antePenultimoSintoma.getFechaDeIngresoDeSintoma() != ultimoSintoma.getFechaDeIngresoDeSintoma();
         } return false;
     }
 
     public ArrayList<Solicitud> solicitudesEnLas48h (SintomaActivo sintomaActivo) { // que cree un array de solicitudes con las que estuvo las 48 horas antes y despues de declarar un sintoma
-        ArrayList <Solicitud> solicitudesEnLas48h = new ArrayList<>(); // crea una nuveo pq depende de cada sintoma este arraylist
+        ArrayList <Solicitud> solicitudesEnLas48h = new ArrayList<>(); // crea una nueva porque depende de cada sintoma este arraylist
         for (int i = 0; i < solicitudesRecibidas.size(); i++) {
             if (solicitudesRecibidas.get(i).fecha2.equals(sintomaActivo.getFechaDeIngresoDeSintoma()) || solicitudesRecibidas.get(i).fecha2.add48Hours().before(sintomaActivo.getFechaDeIngresoDeSintoma()) || sintomaActivo.getFechaDeIngresoDeSintoma().add48Hours().before(solicitudesRecibidas.get(i).fecha2)) {
                 solicitudesEnLas48h.add(solicitudesRecibidas.get(i));
@@ -90,7 +90,7 @@ public class Usuario {
         } return solicitudesEnLas48h;
     }
 
-    public ArrayList <Usuario> usuariosConLosQueEstuvoEnLas48h (ArrayList <Solicitud> solicitudesEnLas48h){ //recorre el array de solicitudes en las ultimas 48 y me da el array de usuarios con el q estuve
+    public ArrayList <Usuario> usuariosConLosQueEstuvoEnLas48h (ArrayList <Solicitud> solicitudesEnLas48h){ //recorre el array de solicitudes en las ultimas 48 y me da el array de usuarios con el que estuve
         ArrayList <Usuario> usuariosConLosQueEstuvoEnLas48h = new ArrayList<>();
         for (int i = 0; i < solicitudesEnLas48h.size(); i++) {
             if (solicitudesEnLas48h.get(i).recibe != this){

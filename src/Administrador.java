@@ -1,6 +1,6 @@
 import util.Scanner;
-
 import java.util.ArrayList;
+
 
 public class Administrador {
     String usuario;

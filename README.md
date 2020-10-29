@@ -10,7 +10,7 @@ Integrantes:
 * Implementamos:
           - Menues
           - Brote
-          - Solicitudes de Contacto Esrecho
+          - Solicitudes de Contacto Estrecho
           - clase 'Date'
           
 * Terminamos persistencia (Tiene algunos bugs).
