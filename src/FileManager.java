@@ -32,28 +32,34 @@ public class FileManager {
             System.out.println(e);
         }
     }
-/*
-    void updateUserFromFile(Usuario usuario){
-        try{
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
-            BufferedWriter bWriter = new BufferedWriter(new FileWriter(filePath));
 
-            String lineToRemove = usuario.cuil + usuario.celular + usuario.zona + usuario.nombre + (usuario.solicitudesRechazadas - 1);
-            String currentLine;
+    void updateUserFromFile(Usuario usuario) throws Exception {
+        try {
+            BufferedReader bReader = new BufferedReader(new FileReader(filePath));
+            StringBuffer inputBuffer = new StringBuffer();
 
-            while((currentLine = reader.readLine()) != null) {
-                String lineaRecortada = currentLine.trim();
-                if(lineaRecortada.equals(lineToRemove)) continue;
-                bWriter.write(lineaRecortada);
+            String lineToRemove = usuario.cuil + "," + usuario.celular + "," + usuario.zona + "," + usuario.nombre + "," + (usuario.solicitudesRechazadas-1);
+            String linea;
+
+            while ((linea = bReader.readLine()) != null) {
+                if(linea.equals("cuil,cel,zona,nombre,nroDeRechazos")){
+                    inputBuffer.append(linea);
+                }else if (linea.equals(lineToRemove)) {
+                    linea = "\n" + usuario.cuil + "," + usuario.celular + "," + usuario.zona + "," + usuario.nombre + "," + usuario.solicitudesRechazadas;
+                    inputBuffer.append(linea);
+                } else {
+                    inputBuffer.append("\n" + linea);
+                }
             }
-            bWriter.write("\n" + usuario.cuil + "," + usuario.celular + "," + usuario.zona + "," + usuario.nombre + "," + usuario.solicitudesRechazadas);
-            bWriter.close();
-            reader.close();
-        } catch(Exception e) {
-            System.out.println(e);
+            bReader.close();
+            FileOutputStream archivoResultado = new FileOutputStream(filePath);
+            archivoResultado.write(inputBuffer.toString().getBytes());
+            archivoResultado.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-*/
+
     void writeSolicitudToFile(Solicitud solicitud,ArrayList<Solicitud> listaSolicitudes){
         try {
             BufferedWriter bWriter = new BufferedWriter(new FileWriter(filePath, true));
