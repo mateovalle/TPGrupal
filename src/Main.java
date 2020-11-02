@@ -88,13 +88,12 @@ public class Main {
                 for (int i = 0; i < usuarioActivo.solicitudesRecibidas.size(); i++) {
                     System.out.println(usuarioActivo.solicitudesRecibidas.get(i).toString());
                 }
-                System.out.println("");
-                int SioNo = Scanner.getInt("Ingrese 0 si desea contestar a alguna solicitud, o ingrese 1 para volver al menu: ");
+                int SioNo = Scanner.getInt("\n Ingrese 0 si desea contestar a alguna solicitud, o ingrese 1 para volver al menu: ");
                 if(SioNo==0) {
                     for (int i = 0; i < usuarioActivo.solicitudesRecibidas.size(); i++) {
                         System.out.println(i+". "+usuarioActivo.solicitudesRecibidas.get(i).toString());
                     }
-                    int nroDeSolicitud= Scanner.getInt("Que solicitud desea contestar: ");
+                    int nroDeSolicitud= Scanner.getInt("Que solicitud desea contestar: "); // Agregar excepción por si se elige una solicitud inexistente -Pedro
                     if(nroDeSolicitud<= usuarioActivo.solicitudesRecibidas.size()){
                         int SioNo2=Scanner.getInt("Ingrese 0 si hubo contacto estrecho, ingrese 1 si no hubo contacto estrecho: ");
                         Solicitud solicitud= usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud);
