@@ -5,7 +5,7 @@ public class EnfermedadesABM {
     static ArrayList<Sintoma> listaDeSintomas;
     static ArrayList<Brote> listaDeBrotes;
 
-    static public void chequearQueExisteBrote (ArrayList<Usuario> usuariosContagiados, SintomaActivo sintomaActivo){
+    static public void chequearQueExisteBrote (ArrayList<Usuario> usuariosContagiados, Enfermedad enfermedad){
         ArrayList <Usuario> usuariosDelBrote = new ArrayList<>();
         for (int i = 0; i < usuariosContagiados.size() ; i++) {
             ArrayList <Usuario> usuariosConLosQueEstuvo = usuariosContagiados.get(i).usuariosConLosQueEstuvoEnLas48h(usuariosContagiados.get(i).solicitudesEnLas48h(sintomaActivo));
@@ -13,7 +13,7 @@ public class EnfermedadesABM {
                 usuariosDelBrote.add(usuariosConLosQueEstuvo.get(j));
             }
         } if (usuariosDelBrote.size() >= 5 ){
-            Brote broteActivo = new Brote (usuariosDelBrote, sintomaActivo);
+            Brote broteActivo = new Brote (usuariosDelBrote, enfermedad);
             listaDeBrotes.add(broteActivo);
         } else {
             // no pasa nada
@@ -31,4 +31,5 @@ public class EnfermedadesABM {
             }
         } return listaDeBrotes;
     }
+
 }
