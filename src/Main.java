@@ -21,7 +21,6 @@ public class Main {
 
     }
     //Menus
-
     static void inicio(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo, FileManager ansesReader) throws Exception{
         System.out.println("1. Ingresar como administrador");
         System.out.println("2. Ingresar como usuario");
@@ -50,7 +49,7 @@ public class Main {
         }
     }
 
-    static void menuDeUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) {
+    static void menuDeUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception {
         System.out.println("1. Declarar contacto estrecho");
         System.out.println("2. Revisar y contestar solicitudes de contacto estrecho");
         System.out.println("3. Declarar sintoma");
@@ -101,13 +100,16 @@ public class Main {
                         Solicitud solicitud= usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud);
                         if(SioNo2==0){
                             usuarioActivo.contestarSolicitud(solicitud, userManager, true);
+                            menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                         }else if(SioNo2== 1){
                             usuarioActivo.contestarSolicitud(solicitud,userManager, false);
-                            //userReader.updateUserFromFile(usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud).envia);
+                            userReader.updateUserFromFile(usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud).envia);
+                            menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                         }else {
                             System.out.println("No ha ingresado un numero valido");
                             menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                         }
+                        // Eliminar solicitud, tal vez con un SintomaManager - Pedro
                     }else{
                         System.out.println("No ha ingresado un numero valido");
                         menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
@@ -220,7 +222,7 @@ public class Main {
     }
 
     static void entrarComoUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception {
-        String cuilOContraseña = Scanner.getString("Ingrese su cuil o celular");
+        String cuilOContraseña = Scanner.getString("Ingrese su cuil o celular: ");
         for (int i = 0; i < userManager.listaDeUsuarios.size(); i++) {
             if (cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).celular) || cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).cuil)) {
                 usuarioActivo = userManager.listaDeUsuarios.get(i);
