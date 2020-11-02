@@ -270,23 +270,24 @@ public class Main {
     }
 
     static Sintoma buscarSintoma(String nombre) {
-        /*for (int i = 0; i < algo.listaDeSintomas.size(); i++) {
-            if(algo.listaDeSintomas.get(i).equals(nombre)){
-                return algo.listaDeSintomas.get(i);
+        for (int i = 0; i < EnfermedadesABM.listaDeSintomas.size(); i++) {
+            if(EnfermedadesABM.listaDeSintomas.get(i).equals(nombre)){
+                return EnfermedadesABM.listaDeSintomas.get(i);
             }else{
                 //que siga buscando. -Timoteo
             }
-            }*/
+        }
         return null;
     }
+
     static Enfermedad buscarEnfermedad(String nombre) {
-//        for (int i = 0; i < algo.listaDeEnfermedad.size(); i++) {
-//            if(algo.listaDeEnfermedad.get(i).equals(nombre)){
-//                return algo.listaDeEnfermedad.get(i);
-//            }else{
-        //que siga buscando. -Timoteo
-//            }
-//        }
+        for (int i = 0; i < EnfermedadesABM.listaDeEnfermedades.size(); i++) {
+            if(EnfermedadesABM.listaDeEnfermedades.get(i).equals(nombre)){
+                return EnfermedadesABM.listaDeEnfermedades.get(i);
+            }else{
+                //que siga buscando. -Timoteo
+            }
+        }
         return null;
    }
 

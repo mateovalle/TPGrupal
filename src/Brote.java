@@ -3,12 +3,12 @@ import java.util.ArrayList;
 public class Brote {
 
     private ArrayList<Usuario> usuariosContagiados;
-    private Sintoma sintoma;
+    private Enfermedad enfermedad;
 
 
-    public Brote(ArrayList<Usuario> usuariosContagiados, Sintoma sintoma) {
+    public Brote(ArrayList<Usuario> usuariosContagiados, Enfermedad  enfermedad) {
         this.usuariosContagiados = usuariosContagiados;
-        this.sintoma = sintoma;
+        this.enfermedad = enfermedad;
     }
 
 
@@ -16,8 +16,8 @@ public class Brote {
         return usuariosContagiados;
     }
 
-    public Sintoma getSintoma() {
-        return sintoma;
+    public Enfermedad getEnfermedad() {
+        return enfermedad;
     }
 
     public Integer sizeDelBrote (){

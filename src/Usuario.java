@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Usuario {
     String cuil;
@@ -7,7 +8,7 @@ public class Usuario {
     String nombre;
     int solicitudesRechazadas;
     boolean estaBloqueado = false;
-    ArrayList <SintomaActivo> sintomasActivos = new ArrayList<>();
+    HashMap<Sintoma, Date> sintomas= new HashMap<>();
     ArrayList <Advertencia> advertencias = new ArrayList<>();
     ArrayList<Usuario> contactosEstrechos = new ArrayList<>();
     ArrayList<Solicitud> solicitudesRecibidas = new ArrayList<>();
@@ -48,14 +49,14 @@ public class Usuario {
     public void declararSintoma (Date fechaDeIngresoDeSintoma, String nombreSintoma, UserManager userManager){ // falta persistencia
         Sintoma sintomaADeclarar = Main.buscarSintoma(nombreSintoma);
         if (sintomaADeclarar != null) {
-            SintomaActivo nuevoSintomaActivo = new SintomaActivo(nombreSintoma, fechaDeIngresoDeSintoma);
-            sintomasActivos.add(nuevoSintomaActivo);
-            if (declaraMasDeDosSintomasEnUnDia(nuevoSintomaActivo)) {
-                ArrayList <Usuario> usuariosConLosQueEstuvo = usuariosConLosQueEstuvoEnLas48h(solicitudesEnLas48h(nuevoSintomaActivo));
+            Sintoma nuevoSintoma = new Sintoma(nombreSintoma);
+            sintomas.put(nuevoSintoma, fechaDeIngresoDeSintoma);
+            if (declaraMasDeDosSintomasEnUnDia(nuevoSintoma)) {
+                ArrayList <Usuario> usuariosConLosQueEstuvo = usuariosConLosQueEstuvoEnLas48h(solicitudesEnLas48h(nuevoSintoma));
                 userManager.mandarAdvertencia(usuariosConLosQueEstuvo,fechaDeIngresoDeSintoma, this);
                 // recorre el arraylist de contacos estrechos, se fija si la date del encuentro esta en las 48 de declaracion de sintoma --> mandar advertencia
                 ArrayList<Usuario> usuariosContagiados = userManager.usuariosContagiados(sintomaADeclarar, usuariosConLosQueEstuvo);
-                EnfermedadesABM.chequearQueExisteBrote(usuariosContagiados, nuevoSintomaActivo);
+                EnfermedadesABM.chequearQueExisteBrote(usuariosContagiados, nuevoSintoma);
             }
         } else {
             System.out.println("Ese sintomas no existe");
@@ -72,8 +73,8 @@ public class Usuario {
     }
 
 
-    public boolean declaraMasDeDosSintomasEnUnDia (SintomaActivo ultimoSintoma) {
-        SintomaActivo anteUltimoSintoma = sintomasActivos.get(sintomasActivos.size() - 2); // anteultimo sintoma
+    public boolean declaraMasDeDosSintomasEnUnDia (Sintoma ultimoSintoma) {
+        SintomaActivo anteUltimoSintoma = sintomas.(sintomas.size()-3); // anteultimo sintoma
         SintomaActivo antePenultimoSintoma = sintomasActivos.get(sintomasActivos.size() - 3); // comprobar --> quiero el antepenultimo de la lista porque acabo de agregar uno
         if (ultimoSintoma.getFechaDeIngresoDeSintoma() == anteUltimoSintoma.getFechaDeIngresoDeSintoma()) {
             // quiero que sean diferentes porque si es igual ya le mande una notificacion antes
