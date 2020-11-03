@@ -5,9 +5,13 @@ public class EnfermedadesABM {
     static ArrayList<Sintoma> listaDeSintomas;
     static ArrayList<Brote> listaDeBrotes;
 
+
+    //
     static public void chequearQueExisteBrote (ArrayList<Usuario> usuariosContagiados, Enfermedad enfermedad){
         ArrayList <Usuario> usuariosDelBrote = new ArrayList<>();
         for (int i = 0; i < usuariosContagiados.size() ; i++) {
+            usuariosDelBrote.add(usuariosContagiados.get(i));
+        }
             ArrayList <Usuario> usuariosConLosQueEstuvo = usuariosContagiados.get(i).usuariosConLosQueEstuvoEnLas48h(usuariosContagiados.get(i).solicitudesEnLas48h(sintomaActivo));
             for (int j = 0; j < usuariosConLosQueEstuvo.size(); j++) {
                 usuariosDelBrote.add(usuariosConLosQueEstuvo.get(j));

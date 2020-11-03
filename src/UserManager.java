@@ -62,13 +62,12 @@ public class UserManager {
         }
     }
 
-    public ArrayList<Usuario> usuariosContagiados (Sintoma sintoma, ArrayList<Usuario> usuariosConLosQueEstuvo) { // los sintomas que dos usuarios comparten entre las 48h
+    // se hace si comparten sintomas de una enfermedad o solo si comparten enfermedad??
+    public ArrayList<Usuario> usuariosContagiados (Enfermedad enfermedad, ArrayList<Usuario> usuariosConLosQueEstuvo) { // las enfermedades que dos usuarios comparten entre las 48h
         ArrayList<Usuario> usuariosContagiados = new ArrayList<>();
         for (int i = 0; i < usuariosConLosQueEstuvo.size(); i++) {
-            for (int j = 0; j < usuariosConLosQueEstuvo.get(i).sintomasActivos.size(); j++) {
-                if (usuariosConLosQueEstuvo.get(i).sintomasActivos.get(j).getNombreDelSintoma().equals(sintoma.nombre)) {
+            if (usuariosConLosQueEstuvo.get(i).enfermedadActual.nombre.equals(enfermedad.nombre)) {
                     usuariosContagiados.add(usuariosConLosQueEstuvo.get(i));
-                }
             }
         } return usuariosContagiados;
     }

@@ -69,6 +69,7 @@ public class Date {
         return dia+"/"+mes+"/"+año;
     }
 
+
     public Date add48Hours (){ // agrega dos dias
         // agrega 2 dias a una fecha --> podria achicar codigo haciendo metodos para los meses que tienen cosas en comun
             if (this.mes == 12) { // diciembre --> sumar año si estoy a fin de mes
