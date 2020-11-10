@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
 public class UserManager {
-    ArrayList<Usuario> listaDeUsuarios = new ArrayList<Usuario>();
-    ArrayList<Administrador> listaDeAdministradores = new ArrayList<Administrador>();
-    ArrayList<Solicitud> solicitudes = new ArrayList<Solicitud>();
+    ArrayList<Usuario> listaDeUsuarios = new ArrayList<>();
+    ArrayList<Administrador> listaDeAdministradores = new ArrayList<>();
+    ArrayList<Solicitud> solicitudes = new ArrayList<>();
 
     public UserManager(){
     }
@@ -62,14 +62,5 @@ public class UserManager {
         }
     }
 
-    // se hace si comparten sintomas de una enfermedad o solo si comparten enfermedad??
-    public ArrayList<Usuario> usuariosContagiados (Enfermedad enfermedad, ArrayList<Usuario> usuariosConLosQueEstuvo) { // las enfermedades que dos usuarios comparten entre las 48h
-        ArrayList<Usuario> usuariosContagiados = new ArrayList<>();
-        for (int i = 0; i < usuariosConLosQueEstuvo.size(); i++) {
-            if (usuariosConLosQueEstuvo.get(i).enfermedadActual.nombre.equals(enfermedad.nombre)) {
-                    usuariosContagiados.add(usuariosConLosQueEstuvo.get(i));
-            }
-        } return usuariosContagiados;
-    }
 
 }

@@ -7,20 +7,59 @@ public class EnfermedadesABM {
 
 
     //
-    static public void chequearQueExisteBrote (ArrayList<Usuario> usuariosContagiados, Enfermedad enfermedad){
-        ArrayList <Usuario> usuariosDelBrote = new ArrayList<>();
-        for (int i = 0; i < usuariosContagiados.size() ; i++) {
-            usuariosDelBrote.add(usuariosContagiados.get(i));
-        }
-            ArrayList <Usuario> usuariosConLosQueEstuvo = usuariosContagiados.get(i).usuariosConLosQueEstuvoEnLas48h(usuariosContagiados.get(i).solicitudesEnLas48h(sintomaActivo));
-            for (int j = 0; j < usuariosConLosQueEstuvo.size(); j++) {
-                usuariosDelBrote.add(usuariosConLosQueEstuvo.get(j));
+
+    public static ArrayList<Usuario> contactosEstrechosEn48HorasConLaMismaEnfermedad(Usuario usuario) {
+        ArrayList<Usuario> contactosEstrechosConLaMismaEnfermedad = new ArrayList<>(); //segundo nivel
+        for (Usuario otroUsuario : usuario.getContactosEstrechos().keySet()) {
+            if (usuario.contactosEstrechos.get(otroUsuario).add48Hours().after(usuario.getFechaDeEnfermedad()) || usuario.contactosEstrechos.get(otroUsuario).equals(usuario.getFechaDeEnfermedad())) {
+                if (usuario.getEnfermedadActual().equals(otroUsuario.getEnfermedadActual())) {
+                    contactosEstrechosConLaMismaEnfermedad.add(otroUsuario);
+                }
             }
-        } if (usuariosDelBrote.size() >= 5 ){
-            Brote broteActivo = new Brote (usuariosDelBrote, enfermedad);
-            listaDeBrotes.add(broteActivo);
-        } else {
-            // no pasa nada
+        }
+        return contactosEstrechosConLaMismaEnfermedad;
+    }
+    static public void chequearQueExisteBrote (Usuario usuario){
+        //hacer un arraylist con el usuario
+        //recorrerla, y agregar todos los contactosEstrechosEn48HorasConLaMisma enfermedad pero solo si no estan todavia en el arraylist
+        //recorrerlo hasta que no se encuentren mas contactos estrechosen48horas
+        //tener un contador con la cantidad de niveles de contagios
+
+        int nivelesDeContagio = 0;
+        ArrayList<Usuario> usuariosDelBrote = new ArrayList<>();
+        usuariosDelBrote.add(usuario);
+        ArrayList<Usuario> usuariosDelNivelSuperior = new ArrayList<>();
+
+        do {
+            usuariosDelNivelSuperior.clear();
+            for (int i = 0; i < usuariosDelBrote.size(); i++) {
+                ArrayList<Usuario> contactosEstrechosEn48HorasConLaMismaEnfermedad = contactosEstrechosEn48HorasConLaMismaEnfermedad(usuariosDelBrote.get(i));
+                for (int j = 0; j < contactosEstrechosEn48HorasConLaMismaEnfermedad.size(); j++) {
+                    if (!usuariosDelBrote.contains(contactosEstrechosEn48HorasConLaMismaEnfermedad.get(j)) && !usuariosDelNivelSuperior.contains(contactosEstrechosEn48HorasConLaMismaEnfermedad.get(j))){
+                       usuariosDelNivelSuperior.add(contactosEstrechosEn48HorasConLaMismaEnfermedad.get(j));
+                    }
+                }
+            }
+            usuariosDelBrote.addAll(usuariosDelNivelSuperior);
+            if (!usuariosDelNivelSuperior.isEmpty()){
+                nivelesDeContagio++;
+            }
+
+        } while (usuariosDelNivelSuperior.size() == 0);
+
+        ArrayList<Usuario> broteSinElUsuario = new ArrayList<>(); //para ver si este usuario se esta sumando a un brote ya existente o si hay que crear otro
+        broteSinElUsuario.addAll(usuariosDelBrote);
+        broteSinElUsuario.remove(usuario);
+        for (int i = 0; i < listaDeBrotes.size(); i++) {
+            if (listaDeBrotes.get(i).getUsuariosContagiados().containsAll(broteSinElUsuario)){
+                listaDeBrotes.get(i).getUsuariosContagiados().add(usuario);
+                return;
+            }
+        }
+
+        if (usuariosDelBrote.size() >= 5 && nivelesDeContagio >= 2){
+            Brote nuevoBrote = new Brote(usuariosDelBrote, usuario.getEnfermedadActual());
+            listaDeBrotes.add(nuevoBrote);
         }
     }
 

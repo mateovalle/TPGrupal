@@ -7,8 +7,9 @@ public class Usuario {
     String zona;
     String nombre;
     int solicitudesRechazadas;
-    boolean estaBloqueado = false;
-    Enfermedad enfermedadActual = null;
+    boolean estaBloqueado;
+    Enfermedad enfermedadActual;
+    Date fechaDeEnfermedad;
     HashMap<Sintoma, Date> sintomas;
     ArrayList <Advertencia> advertencias ;
     HashMap<Usuario, Date> contactosEstrechos;
@@ -22,6 +23,7 @@ public class Usuario {
         this.solicitudesRechazadas = solicitudesRechazadas;
         this.estaBloqueado = false;
         this.enfermedadActual = null;
+        this.fechaDeEnfermedad = null;
         this.sintomas = new HashMap<>();
         this.advertencias = new ArrayList<>();
         this.contactosEstrechos = new HashMap<>();
@@ -29,9 +31,7 @@ public class Usuario {
     }
 
     public void declararContactoEstrecho(Solicitud solicitud,  UserManager userManager){
-        if(estaBloqueado){
-            // esta bloqueado y no puede declarar. --Timo
-        }else{
+        if(!estaBloqueado){
             userManager.mandarSolicitud(solicitud);
         }
     }
@@ -59,15 +59,15 @@ public class Usuario {
             Sintoma nuevoSintoma = new Sintoma(nombreSintoma);
             sintomas.put(nuevoSintoma, fechaDeIngresoDeSintoma);
             if (declaraMasDeDosSintomasEnUnDia(nuevoSintoma, fechaDeIngresoDeSintoma)) {
-                userManager.mandarAdvertencia(encuentrosEnLas48h(nuevoSintoma),fechaDeIngresoDeSintoma, this);
+                userManager.mandarAdvertencia(encuentrosEnLasUltimas48h(nuevoSintoma),fechaDeIngresoDeSintoma, this);
                 // recorre el arraylist de contacos estrechos, se fija si la date del encuentro esta en las 48 de declaracion de sintoma --> mandar advertencia
             }
             Enfermedad enfermedad = DetectorDeEnfermedades.detectarEnfermedad(this);
             this.enfermedadActual = enfermedad;
+            this.fechaDeEnfermedad = fechaDeIngresoDeSintoma;
 
             if (enfermedad != null){
-                ArrayList<Usuario> usuariosContagiados = userManager.usuariosContagiados(enfermedad, encuentrosEnLas48h(nuevoSintoma));
-                EnfermedadesABM.chequearQueExisteBrote(usuariosContagiados, enfermedad);
+                EnfermedadesABM.chequearQueExisteBrote(this);
             }
         } else {
             System.out.println("Ese sintomas no existe");
@@ -78,10 +78,17 @@ public class Usuario {
     public void darDeBajaSintoma (Sintoma sintoma) throws IllegalArgumentException{
         if (sintomas.containsKey(sintoma)) {
             sintomas.remove(sintoma);
+            enfermedadActual = DetectorDeEnfermedades.detectarEnfermedad(this);
+            if (this.enfermedadActual == null){
+                this.fechaDeEnfermedad = null;
+            }
         } else {
             throw new IllegalArgumentException("No se encontro ese sintoma en tu lista de sintomas actuales.");
         }
+
     }
+
+
 
 
     private boolean declaraMasDeDosSintomasEnUnDia (Sintoma sintoma, Date fecha) {
@@ -98,13 +105,28 @@ public class Usuario {
         }
     }
 
-    private ArrayList<Usuario> encuentrosEnLas48h (Sintoma sintoma) { // que cree un array de solicitudes con las que estuvo las 48 horas antes y despues de declarar un sintoma
+    public Enfermedad getEnfermedadActual() {
+        return enfermedadActual;
+    }
+
+    public Date getFechaDeEnfermedad() {
+        return fechaDeEnfermedad;
+    }
+
+    public HashMap<Usuario, Date> getContactosEstrechos() {
+        return contactosEstrechos;
+    }
+
+    private ArrayList<Usuario> encuentrosEnLasUltimas48h(Sintoma sintoma) { // que cree un array de solicitudes con las que estuvo las 48 horas antes y despues de declarar un sintoma
         Date fecha = sintomas.get(sintoma);
         ArrayList <Usuario> encuentrosEnLas48h = new ArrayList<>(); // crea una nueva porque depende de cada sintoma este arraylist
         for (Usuario usuario : contactosEstrechos.keySet()) {
-            if (contactosEstrechos.get(usuario).equals(fecha) || contactosEstrechos.get(usuario).add48Hours().before(fecha) || fecha.add48Hours().before(contactosEstrechos.get(usuario))) {
+            if (contactosEstrechos.get(usuario).equals(fecha) || contactosEstrechos.get(usuario).add48Hours().before(fecha)) {
                 encuentrosEnLas48h.add(usuario);
             }
         } return encuentrosEnLas48h;
     }
+
+
+
 }
