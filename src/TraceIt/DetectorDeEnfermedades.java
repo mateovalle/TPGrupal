@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+package TraceIt;
 
 public class DetectorDeEnfermedades {
     EnfermedadesABM enfermedadesABM;

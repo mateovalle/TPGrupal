@@ -1,3 +1,5 @@
+package TraceIt;
+
 public class SintomaActivo extends Sintoma {
 
     private Date fechaDeIngresoDeSintoma;

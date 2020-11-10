@@ -1,3 +1,5 @@
+package TraceIt;
+
 public class Advertencia {
 
     private Date fecha;

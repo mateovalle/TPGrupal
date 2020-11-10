@@ -1,3 +1,4 @@
+package TraceIt;
 import java.util.ArrayList;
 
 public class EnfermedadesABM {

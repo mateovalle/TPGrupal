@@ -1,3 +1,5 @@
+package TraceIt;
+
 import java.util.ArrayList;
 import util.Scanner;
 

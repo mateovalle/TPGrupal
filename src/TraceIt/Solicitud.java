@@ -1,3 +1,5 @@
+package TraceIt;
+
 public class Solicitud {
     Usuario envia;
     Usuario recibe;

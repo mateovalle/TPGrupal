@@ -1,11 +1,13 @@
+package TraceIt;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Usuario {
-    String cuil;
+    public String cuil;
     String celular;
     String zona;
-    String nombre;
+    public String nombre;
     int solicitudesRechazadas;
     boolean estaBloqueado;
     Enfermedad enfermedadActual;
