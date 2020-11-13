@@ -44,7 +44,7 @@ public class EnfermedadesABM {
                 nivelesDeContagio++;
             }
 
-        } while (usuariosDelNivelSuperior.size() == 0);
+        } while (usuariosDelNivelSuperior.size() > 0);
 
         ArrayList<Usuario> broteSinElUsuario = new ArrayList<>(); //para ver si este usuario se esta sumando a un brote ya existente o si hay que crear otro
         broteSinElUsuario.addAll(usuariosDelBrote);
