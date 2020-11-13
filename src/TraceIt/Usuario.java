@@ -13,16 +13,16 @@ public class Usuario {
     Enfermedad enfermedadActual;
     Date fechaDeEnfermedad;
     HashMap<Sintoma, Date> sintomas;
-    ArrayList <Advertencia> advertencias ;
+    ArrayList <Advertencia> advertencias;
     HashMap<Usuario, Date> contactosEstrechos;
     ArrayList<Solicitud> solicitudesRecibidas;
 
-    public Usuario(String cuil, String celular, String zona, String nombre, int solicitudesRechazadas) {
+    public Usuario(String cuil, String celular, String zona, String nombre) {
         this.cuil = cuil;
         this.celular = celular;
         this.zona = zona;
         this.nombre = nombre;
-        this.solicitudesRechazadas = solicitudesRechazadas;
+        this.solicitudesRechazadas = 0;
         this.estaBloqueado = false;
         this.enfermedadActual = null;
         this.fechaDeEnfermedad = null;
@@ -32,7 +32,22 @@ public class Usuario {
         this.solicitudesRecibidas = new ArrayList<>();
     }
 
-    public void declararContactoEstrecho(Solicitud solicitud,  UserManager userManager){
+    public Usuario(String cuil, String celular, String zona, String nombre, int solicitudesRechazadas, boolean estaBloqueado, Enfermedad enfermedadActual, Date fechaDeEnfermedad, HashMap<Sintoma, Date> sintomas, HashMap<Usuario, Date> contactosEstrechos) {
+        this.cuil = cuil;
+        this.celular = celular;
+        this.zona = zona;
+        this.nombre = nombre;
+        this.solicitudesRechazadas = solicitudesRechazadas;
+        this.estaBloqueado = estaBloqueado;
+        this.enfermedadActual = enfermedadActual;
+        this.fechaDeEnfermedad = fechaDeEnfermedad;
+        this.sintomas = sintomas;
+        this.advertencias = new ArrayList<>();
+        this.contactosEstrechos = contactosEstrechos;
+        this.solicitudesRecibidas = new ArrayList<>();
+    }
+
+    public void declararContactoEstrecho(Solicitud solicitud, UserManager userManager){
         if(!estaBloqueado){
             userManager.mandarSolicitud(solicitud);
         }
@@ -90,9 +105,6 @@ public class Usuario {
 
     }
 
-
-
-
     private boolean declaraMasDeDosSintomasEnUnDia (Sintoma sintoma, Date fecha) {
         int sintomasConLaMismaFecha = 0;
         for (Sintoma sintomasActuales : sintomas.keySet()){
@@ -131,5 +143,37 @@ public class Usuario {
 
     public String getZona() {
         return zona;
+    }
+
+    public String getCuil() {
+        return cuil;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public int getSolicitudesRechazadas() {
+        return solicitudesRechazadas;
+    }
+
+    public boolean isEstaBloqueado() {
+        return estaBloqueado;
+    }
+
+    public HashMap<Sintoma, Date> getSintomas() {
+        return sintomas;
+    }
+
+    public ArrayList<Advertencia> getAdvertencias() {
+        return advertencias;
+    }
+
+    public ArrayList<Solicitud> getSolicitudesRecibidas() {
+        return solicitudesRecibidas;
     }
 }

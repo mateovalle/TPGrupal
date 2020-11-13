@@ -1,24 +1,34 @@
 package TraceIt;
 
+import java.io.File;
 import java.util.ArrayList;
 import util.Scanner;
 
 public class Main {
-    static FileManager ansesReader = new FileManager("src/ANSES");
-    static FileManager userReader = new FileManager("src/Users");
-    static FileManager adminReader = new FileManager("src/Administradores");
-    static FileManager solicitudReader = new FileManager("src/Solicitudes");
+    static FileManager ansesReader = new FileManager("src/TraceIt/ANSES");
+    static FileManager userReader = new FileManager("src/TraceIt/Users");
+    static FileManager adminReader = new FileManager("src/TraceIt/Administradores");
+    static FileManager solicitudReader = new FileManager("src/TraceIt/Solicitudes");
+    static  FileManager advertenciaReader = new FileManager("src/TraceIt/Advertencias");
+    static  FileManager enfermedadesReader = new FileManager("src/TraceIt/Enfermedades");
     public static void main(String[] args) throws Exception {
         ArrayList<String> anses = new ArrayList<>();
         Administrador administradorActivo = null;
+        ArrayList<String[]> enfermedades = enfermedadesReader.getDataFromFile();
+        EnfermedadesABM.llenarListaEnfermedades(enfermedades);
         Usuario usuarioActivo = null;
         UserManager userManager = new UserManager();
-        userManager.agregarUsuariosALista(userReader.getDataFromFile());
         userManager.agregarAdminALista(adminReader.getDataFromFile());
+        userManager.agregarUsuariosALista(userReader.getDataFromFile());
         userManager.agregarSolictudALista(solicitudReader.getDataFromFile());
         userManager.repartirSolicitudes();
+        ArrayList<String[]> advertencias = advertenciaReader.getDataFromFile();
+        for (int i = 1; i < advertencias.size(); i++) {
+            Advertencia advertencia = new Advertencia(buscarUsuario(advertencias.get(i)[0],userManager),new Date(advertencias.get(i)[1]));
+            userManager.advertencias.add(advertencia);
+        }
+        userManager.repartirAdvertencias();
 
-        //FileReader enfermedadesReader = new FileReader("src/Users");
         inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
 
     }
@@ -39,7 +49,7 @@ public class Main {
                 entrarComoUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 break;
             case 3:
-                crearNuevoUsuario(userManager, ansesReader,"src/Users");
+                crearNuevoUsuario(userManager, ansesReader,anses,usuarioActivo,administradorActivo);
                 break;
             case 4:
                 System.exit(0);
@@ -104,7 +114,7 @@ public class Main {
                             menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                         }else if(SioNo2== 1){
                             usuarioActivo.contestarSolicitud(solicitud,userManager, false);
-                            userReader.updateUserFromFile(usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud).envia);
+                            userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
                             menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                         }else {
                             System.out.println("No ha ingresado un numero valido");
@@ -125,6 +135,7 @@ public class Main {
                 Sintoma sintomaADeclarar = buscarSintoma(nombreSintoma);
                 if (sintomaADeclarar != null) {
                     usuarioActivo.declararSintoma(fechaDelSintoma,nombreSintoma, userManager);
+                    advertenciaReader.writeAdvertenciaToFile(userManager);
                     break;
                 } else {
                     menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
@@ -235,15 +246,16 @@ public class Main {
 
     //Creadores
 
-    static void crearNuevoUsuario(UserManager userManager, FileManager ansesReader, String filePath) throws Exception{
+    static void crearNuevoUsuario(UserManager userManager, FileManager ansesReader, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception{
         String cuilOCelular = Scanner.getString("Ingrese su numero de telefono o cuil: ");
         if(buscarUsuario(cuilOCelular,userManager)!=null){
-            //inicio(userManager,anses,*****,******);  <-- Completar - Pedro,Timoteo y Mateo
+            inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
         } else {
             String[] datosAnses = buscarEnAnses(cuilOCelular,ansesReader);
             if(datosAnses != null){
+                Usuario usuario = new Usuario(datosAnses[0],datosAnses[1],datosAnses[2],datosAnses[3]);
                 userManager.crearUsuario(datosAnses[0],datosAnses[1],datosAnses[2],datosAnses[3]);
-                ansesReader.writeUsersToFile(datosAnses,filePath);
+                ansesReader.writeUsersToFile(userManager,"src/TraceIt/Users");
             }
         }
     }

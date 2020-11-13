@@ -2,12 +2,10 @@ package TraceIt;
 import java.util.ArrayList;
 
 public class EnfermedadesABM {
-    static ArrayList<Enfermedad> listaDeEnfermedades;
-    static ArrayList<Sintoma> listaDeSintomas;
-    static ArrayList<Brote> listaDeBrotes;
+    static ArrayList<Enfermedad> listaDeEnfermedades= new ArrayList<>();
+    static ArrayList<Sintoma> listaDeSintomas= new ArrayList<>();
+    static ArrayList<Brote> listaDeBrotes= new ArrayList<>();
 
-
-    //
 
     public static ArrayList<Usuario> contactosEstrechosEn48HorasConLaMismaEnfermedad(Usuario usuario) {
         ArrayList<Usuario> contactosEstrechosConLaMismaEnfermedad = new ArrayList<>(); //segundo nivel
@@ -78,4 +76,24 @@ public class EnfermedadesABM {
         } return listaDeBrotes;
     }
 
+    static public void llenarListaEnfermedades(ArrayList<String[]> enfermedades){
+        for (int i = 1; i < enfermedades.size(); i++) {
+            ArrayList<Sintoma> sintomas = new ArrayList<>();
+            for (int j = 1; j <enfermedades.get(i).length ; j++) {
+                sintomas.add(new Sintoma(enfermedades.get(i)[j]));
+            }
+            Enfermedad enfermedad = new Enfermedad(enfermedades.get(i)[0], sintomas);
+            listaDeEnfermedades.add(enfermedad);
+        }
+        llenarListaDeSintomas();
+    }
+    private static void llenarListaDeSintomas(){
+        for (int i = 1; i < listaDeEnfermedades.size(); i++) {
+            for (int j = 0; j < listaDeEnfermedades.get(i).sintomas.size(); j++) {
+                if(!listaDeSintomas.contains(listaDeEnfermedades.get(i).sintomas.get(j))){
+                    listaDeSintomas.add(listaDeEnfermedades.get(i).sintomas.get(j));
+                }
+            }
+        }
+    }
 }

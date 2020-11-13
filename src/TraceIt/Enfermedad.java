@@ -5,7 +5,12 @@ import java.util.Objects;
 
 public class Enfermedad {
     String nombre;
-    public static ArrayList<Sintoma> sintomas = new ArrayList<>();
+    public ArrayList<Sintoma> sintomas;
+
+    public Enfermedad(String nombre, ArrayList<Sintoma> sintomas) {
+        this.nombre = nombre;
+        this.sintomas = sintomas;
+    }
 
     @Override
     public boolean equals(Object o) {
