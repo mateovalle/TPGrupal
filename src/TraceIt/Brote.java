@@ -6,11 +6,13 @@ public class Brote {
 
     private ArrayList<Usuario> usuariosContagiados;
     private Enfermedad enfermedad;
+    private String zona;
 
 
-    public Brote(ArrayList<Usuario> usuariosContagiados, Enfermedad  enfermedad) {
+    public Brote(ArrayList<Usuario> usuariosContagiados, Enfermedad  enfermedad, String zona) {
         this.usuariosContagiados = usuariosContagiados;
         this.enfermedad = enfermedad;
+        this.zona = zona;
     }
 
 
@@ -20,6 +22,10 @@ public class Brote {
 
     public Enfermedad getEnfermedad() {
         return enfermedad;
+    }
+
+    public String getZona() {
+        return zona;
     }
 
     public Integer sizeDelBrote (){

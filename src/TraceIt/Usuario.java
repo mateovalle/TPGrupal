@@ -129,6 +129,7 @@ public class Usuario {
         } return encuentrosEnLas48h;
     }
 
-
-
+    public String getZona() {
+        return zona;
+    }
 }

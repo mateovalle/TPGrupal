@@ -53,13 +53,15 @@ public class EnfermedadesABM {
         broteSinElUsuario.remove(usuario);
         for (int i = 0; i < listaDeBrotes.size(); i++) {
             if (listaDeBrotes.get(i).getUsuariosContagiados().containsAll(broteSinElUsuario)){
-                listaDeBrotes.get(i).getUsuariosContagiados().add(usuario);
-                return;
+                if( listaDeBrotes.get(i).getZona().equals(usuario.getZona())){
+                    listaDeBrotes.get(i).getUsuariosContagiados().add(usuario);
+                    return;
+                }
             }
         }
 
         if (usuariosDelBrote.size() >= 5 && nivelesDeContagio >= 2){
-            Brote nuevoBrote = new Brote(usuariosDelBrote, usuario.getEnfermedadActual());
+            Brote nuevoBrote = new Brote(usuariosDelBrote, usuario.getEnfermedadActual(),usuario.getZona());
             listaDeBrotes.add(nuevoBrote);
         }
     }
