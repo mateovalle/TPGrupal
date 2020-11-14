@@ -16,4 +16,12 @@ public class Sintoma {
         }
         return false;
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public ArrayList<Enfermedad> getEnfermedadesRelacionadas() {
+        return enfermedadesRelacionadas;
+    }
 }

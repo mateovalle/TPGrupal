@@ -137,15 +137,14 @@ public class Main {
                 String fecha = Scanner.getString("Ingrese la fecha de hoy separado por '/'");
                 Date fechaDelSintoma = new Date(fecha);
                 Sintoma sintomaADeclarar = buscarSintoma(nombreSintoma);
-                if (sintomaADeclarar != null) {
-                    usuarioActivo.declararSintoma(fechaDelSintoma,nombreSintoma, userManager);
+                if (sintomaADeclarar != null && !usuarioActivo.getSintomas().containsKey(sintomaADeclarar)) {
+                    usuarioActivo.declararSintoma(fechaDelSintoma, nombreSintoma, userManager);
                     advertenciaReader.writeAdvertenciaToFile(userManager);
-                    userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
-                    break;
-                } else {
-                    menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
+                    userReader.writeUsersToFile(userManager, "src/TraceIt/Users");
+                }else{
+                    System.out.println("El sintoma no se encontro o ya fue declarado");
                 }
-
+                menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 break;
 
             case 4:
@@ -154,10 +153,10 @@ public class Main {
                 Sintoma sintomaAELiminar = buscarSintoma(nombre);
                 if (sintomaAELiminar != null) {
                     usuarioActivo.darDeBajaSintoma(sintomaAELiminar);
-                    break;
                 } else {
                     menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 }
+                break;
             case 5:
                 //Ver Mapa
                 System.out.println("Los brotes activos son: ");
@@ -305,10 +304,8 @@ public class Main {
 
     static Sintoma buscarSintoma(String nombre) {
         for (int i = 0; i < EnfermedadesABM.listaDeSintomas.size(); i++) {
-            if(EnfermedadesABM.listaDeSintomas.get(i).equals(nombre)){
+            if(EnfermedadesABM.listaDeSintomas.get(i).getNombre().equals(nombre)){
                 return EnfermedadesABM.listaDeSintomas.get(i);
-            }else{
-                //que siga buscando. -Timoteo
             }
         }
         return null;
@@ -318,8 +315,6 @@ public class Main {
         for (int i = 0; i < EnfermedadesABM.listaDeEnfermedades.size(); i++) {
             if(EnfermedadesABM.listaDeEnfermedades.get(i).equals(nombre)){
                 return EnfermedadesABM.listaDeEnfermedades.get(i);
-            }else{
-                //que siga buscando. -Timoteo
             }
         }
         return null;
