@@ -52,6 +52,7 @@ public class Usuario {
             userManager.mandarSolicitud(solicitud);
         }
     }
+
     public void contestarSolicitud(Solicitud solicitud, UserManager userManager, boolean respuesta){
         Usuario envia = solicitud.envia;
         Usuario recibe = solicitud.recibe;
@@ -67,7 +68,7 @@ public class Usuario {
                 envia.estaBloqueado = true;
             }
         }
-        userManager.solicitudes.remove(solicitud);
+        userManager.listaSolicitudes.remove(solicitud);
     }
 
     public void declararSintoma (Date fechaDeIngresoDeSintoma, String nombreSintoma, UserManager userManager){ // falta persistencia

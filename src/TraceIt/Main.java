@@ -9,8 +9,9 @@ public class Main {
     static FileManager userReader = new FileManager("src/TraceIt/Users");
     static FileManager adminReader = new FileManager("src/TraceIt/Administradores");
     static FileManager solicitudReader = new FileManager("src/TraceIt/Solicitudes");
-    static  FileManager advertenciaReader = new FileManager("src/TraceIt/Advertencias");
-    static  FileManager enfermedadesReader = new FileManager("src/TraceIt/Enfermedades");
+    static FileManager advertenciaReader = new FileManager("src/TraceIt/Advertencias");
+    static FileManager enfermedadesReader = new FileManager("src/TraceIt/Enfermedades");
+    static FileManager brotesReader = new FileManager("src/TraceIt/Brotes");
     public static void main(String[] args) throws Exception {
         ArrayList<String> anses = new ArrayList<>();
         Administrador administradorActivo = null;
@@ -22,6 +23,7 @@ public class Main {
         userManager.agregarUsuariosALista(userReader.getDataFromFile());
         userManager.agregarSolictudALista(solicitudReader.getDataFromFile());
         userManager.repartirSolicitudes();
+        EnfermedadesABM.llenarListaDeBrotes(brotesReader.getDataFromFile(),userManager);
         ArrayList<String[]> advertencias = advertenciaReader.getDataFromFile();
         for (int i = 1; i < advertencias.size(); i++) {
             Advertencia advertencia = new Advertencia(buscarUsuario(advertencias.get(i)[0],userManager),new Date(advertencias.get(i)[1]));
@@ -66,7 +68,7 @@ public class Main {
         System.out.println("2. Revisar y contestar solicitudes de contacto estrecho");
         System.out.println("3. Declarar sintoma");
         System.out.println("4. Eliminar sintoma");
-        System.out.println("5. Ver Mapa");
+        System.out.println("5. Ver Brotes Activos");
         System.out.println("6. Cerrar sesion");
 
         int n = Scanner.getInt("");
@@ -90,7 +92,7 @@ public class Main {
                         Date dateEnd = new Date(fecha2);
                         Solicitud solicitud = new Solicitud(usuarioActivo, otroUsuario, dateStart, dateEnd);
                         usuarioActivo.declararContactoEstrecho(solicitud, userManager);
-                        solicitudReader.writeSolicitudToFile(solicitud,userManager.solicitudes);
+                        solicitudReader.writeSolicitudToFile(userManager.listaSolicitudes);
                         menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                     }
                 }
@@ -111,20 +113,22 @@ public class Main {
                         Solicitud solicitud= usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud);
                         if(SioNo2==0){
                             usuarioActivo.contestarSolicitud(solicitud, userManager, true);
-                            menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                         }else if(SioNo2== 1){
                             usuarioActivo.contestarSolicitud(solicitud,userManager, false);
                             userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
-                            menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                         }else {
                             System.out.println("No ha ingresado un numero valido");
-                            menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                         }
-                        // Eliminar solicitud, tal vez con un SintomaManager - Pedro
+                        userManager.listaSolicitudes.remove(usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud));
+                        usuarioActivo.solicitudesRecibidas.remove(nroDeSolicitud);
+                        solicitudReader.writeSolicitudToFile(userManager.listaSolicitudes);
+                        menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                     }else{
                         System.out.println("No ha ingresado un numero valido");
                         menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                     }
+                }else{
+                    menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 }
                 break;
             case 3:
@@ -136,6 +140,7 @@ public class Main {
                 if (sintomaADeclarar != null) {
                     usuarioActivo.declararSintoma(fechaDelSintoma,nombreSintoma, userManager);
                     advertenciaReader.writeAdvertenciaToFile(userManager);
+                    userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
                     break;
                 } else {
                     menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
@@ -155,7 +160,13 @@ public class Main {
                 }
             case 5:
                 //Ver Mapa
-
+                System.out.println("Los brotes activos son: ");
+                ArrayList<Brote> brotesActivos = EnfermedadesABM.actualizarBrotesActivos();
+                for (int i = 0; i < brotesActivos.size(); i++) {
+                    brotesActivos.get(i).print();
+                }
+                menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
+                break;
             case 6:
                 //Cerrar sesion
                 cerrarSesion();
@@ -203,6 +214,13 @@ public class Main {
 
             case 4:
                 //Ver Mapa
+                System.out.println("Los brotes activos son: ");
+                ArrayList<Brote> brotesActivos = EnfermedadesABM.actualizarBrotesActivos();
+                for (int i = 0; i < brotesActivos.size(); i++) {
+                    brotesActivos.get(i).print();
+                }
+                menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
+                break;
 
             case 5:
                 //Cerrar Sesion
@@ -253,9 +271,11 @@ public class Main {
         } else {
             String[] datosAnses = buscarEnAnses(cuilOCelular,ansesReader);
             if(datosAnses != null){
-                Usuario usuario = new Usuario(datosAnses[0],datosAnses[1],datosAnses[2],datosAnses[3]);
                 userManager.crearUsuario(datosAnses[0],datosAnses[1],datosAnses[2],datosAnses[3]);
                 ansesReader.writeUsersToFile(userManager,"src/TraceIt/Users");
+                inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
+            } else{
+                System.out.println("esta entrando acá");
             }
         }
     }

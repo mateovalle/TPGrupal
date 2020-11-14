@@ -18,6 +18,7 @@ public class EnfermedadesABM {
         }
         return contactosEstrechosConLaMismaEnfermedad;
     }
+
     static public void chequearQueExisteBrote (Usuario usuario){
         //hacer un arraylist con el usuario
         //recorrerla, y agregar todos los contactosEstrechosEn48HorasConLaMisma enfermedad pero solo si no estan todavia en el arraylist
@@ -80,7 +81,10 @@ public class EnfermedadesABM {
         for (int i = 1; i < enfermedades.size(); i++) {
             ArrayList<Sintoma> sintomas = new ArrayList<>();
             for (int j = 1; j <enfermedades.get(i).length ; j++) {
-                sintomas.add(new Sintoma(enfermedades.get(i)[j]));
+                String[] sintomasDeEnfemedad =enfermedades.get(i)[1].split(";");
+                for (int k = 0; k < sintomasDeEnfemedad.length; k++) {
+                    sintomas.add(new Sintoma(sintomasDeEnfemedad[k]));
+                }
             }
             Enfermedad enfermedad = new Enfermedad(enfermedades.get(i)[0], sintomas);
             listaDeEnfermedades.add(enfermedad);
@@ -94,6 +98,41 @@ public class EnfermedadesABM {
                     listaDeSintomas.add(listaDeEnfermedades.get(i).sintomas.get(j));
                 }
             }
+        }
+    }
+
+    static ArrayList<Brote> actualizarBrotesActivos(){ //Un brote se desactiva cuando ninguna persona del brote sigue teniendo esa enfermedad
+        for (int i = 0; i < listaDeBrotes.size(); i++) {
+            int count = 0;
+            for (Usuario usuario : listaDeBrotes.get(i).getUsuariosContagiados()){
+                if(!usuario.enfermedadActual.equals(listaDeBrotes.get(i).getEnfermedad())){
+                    count++;
+                }
+            }
+            if(count == listaDeBrotes.get(i).getUsuariosContagiados().size()){
+                listaDeBrotes.get(i).desactivarBrote();
+            }
+        }
+        ArrayList<Brote> brotesActivos = new ArrayList<>();
+        for (int i = 0; i < listaDeBrotes.size(); i++) {
+            if(listaDeBrotes.get(i).isActivo()){
+                brotesActivos.add(listaDeBrotes.get(i));
+            }
+        }
+        return brotesActivos;
+    }
+
+    static void llenarListaDeBrotes(ArrayList<String[]> infoBrotes, UserManager userManager){
+        for (int i = 1; i < infoBrotes.size(); i++) {
+            Enfermedad enfermedad = Main.buscarEnfermedad(infoBrotes.get(i)[0]);
+            String zona = infoBrotes.get(i)[1];
+            ArrayList<Usuario> usuariosEnBrote=new ArrayList<>();
+            for (int j = 2; j < infoBrotes.get(i).length; j++) {
+                Usuario unUsuario = Main.buscarUsuario(infoBrotes.get(i)[j],userManager);
+                usuariosEnBrote.add(unUsuario);
+            }
+            Brote brote = new Brote(usuariosEnBrote,enfermedad,zona);
+            listaDeBrotes.add(brote);
         }
     }
 }

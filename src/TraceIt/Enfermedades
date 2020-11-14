@@ -1,2 +1,3 @@
 enfermedad,sintoma1,sintoma2,sintoma3
-COVID, dolor de cabeza, fiebre, tos, dolor de garganta,
+COVID-19,fiebre;tos;cansancio;diarrea;nauseas
+Dengue,fiebre;sarpullido;dolor de cuerpo;nauseas;vomito

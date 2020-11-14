@@ -45,22 +45,20 @@ public class FileManager {
                     string6 = usuario.getEnfermedadActual().nombre;
                     string7 = usuario.getFechaDeEnfermedad().toString();
                 }
-                String string8="";
+                String string8="null_null";
                 for(Sintoma sintoma:usuario.getSintomas().keySet()) {
-                    if(sintoma==null){
-                        string8+= "null";
-                    }else{
-                    string8 +=sintoma.nombre + "_";
-                    string8 += usuario.getSintomas().get(sintoma).toString() + ";";
+                    if(sintoma!=null){
+                        string8 = "";
+                        string8 +=sintoma.nombre + "_";
+                        string8 += usuario.getSintomas().get(sintoma).toString() + ";";
                     }
                 }
-                String string9="";
+                String string9="null_null";
                 for(Usuario otroUsuario:usuario.getContactosEstrechos().keySet()) {
-                    if(otroUsuario==null){
-                        string9+="null";
-                    }else{
-                    string9 +=otroUsuario.getCuil() + "_";
-                    string9 += usuario.getContactosEstrechos().get(otroUsuario).toString() + ";";
+                    if(otroUsuario!=null){
+                        string9 = "";
+                        string9 +=otroUsuario.getCuil() + "_";
+                        string9 += usuario.getContactosEstrechos().get(otroUsuario).toString() + ";";
                     }
                 }
                 String usuarioLine = "\n"+string0+","+string1+","+string2+","+string3+","+string4+","+string5+","+string6+","+string7+","+string8+","+string9;
@@ -72,9 +70,10 @@ public class FileManager {
         }
     }
 
-    void writeSolicitudToFile(Solicitud solicitud,ArrayList<Solicitud> listaSolicitudes){
+    void writeSolicitudToFile(ArrayList<Solicitud> listaSolicitudes){
         try {
-            BufferedWriter bWriter = new BufferedWriter(new FileWriter(filePath, true));
+            BufferedWriter bWriter = new BufferedWriter(new FileWriter(filePath));
+            bWriter.write("Usuario envia, Usuario recibe, Date fecha1, Date fecha2");
             for (int i = 0; i < listaSolicitudes.size(); i++) {
                 String cuilEnvia = listaSolicitudes.get(i).envia.cuil;
                 String cuilRecibe = listaSolicitudes.get(i).recibe.cuil;
@@ -102,4 +101,26 @@ public class FileManager {
         }
     }
 
+    void writeBrotesToFile(){
+        ArrayList<Brote> listaDeBrotes = EnfermedadesABM.listaDeBrotes;
+        if(!listaDeBrotes.isEmpty()){
+            try{
+                BufferedWriter bWriter = new BufferedWriter(new FileWriter(filePath));
+                bWriter.write("Enfermedad,zona,cuilsDeEnfermos");
+                for (int i = 0; i < listaDeBrotes.size(); i++) {
+                    String enfermedad = listaDeBrotes.get(i).getEnfermedad().nombre;
+                    String zona = listaDeBrotes.get(i).getZona();
+                    String cuils = "";
+                    for (int j = 0; j < listaDeBrotes.get(i).getUsuariosContagiados().size()-1; j++) {
+                        cuils += listaDeBrotes.get(i).getUsuariosContagiados().get(j).getCuil()+",";
+                    }
+                    cuils += listaDeBrotes.get(i).getUsuariosContagiados().get(listaDeBrotes.get(i).getUsuariosContagiados().size()-1).getCuil();
+                    bWriter.write("\n"+enfermedad+ ","+zona+","+cuils);
+                }
+                bWriter.close();
+            }catch (Exception e){
+                System.out.println(e);
+            }
+        }
+    }
 }
