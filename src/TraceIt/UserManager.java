@@ -110,4 +110,8 @@ public class UserManager {
             }
         }
     }
+
+    public ArrayList<Usuario> getListaDeUsuarios() {
+        return listaDeUsuarios;
+    }
 }

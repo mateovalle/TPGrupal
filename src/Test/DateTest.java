@@ -16,15 +16,29 @@ public class DateTest {
     }
 
     @Test
-    public void before() {
+    public void test002_before() {
+        Date fechaAntes= new Date("02/07/2020");
+        Date fecha= new Date("21/07/2020");
+
+        Assert.assertTrue(fechaAntes.before(fecha));
     }
 
     @Test
-    public void after() {
+    public void test003_after() {
+        Date fechaDespues= new Date("21/07/2020");
+        Date fecha= new Date("02/07/2020");
+
+        Assert.assertTrue(fecha.after(fechaDespues));
     }
 
     @Test
-    public void testEquals() {
+    public void test003_Equals() {
+        Date fecha2= new Date("02/07/2020");
+        Date fecha= new Date("02/07/2020");
+        Date fechaDif= new Date("21/07/2020");
+
+        Assert.assertTrue(fecha.equals(fecha2));
+        Assert.assertFalse(fecha.equals(fechaDif));
     }
 
     @Test

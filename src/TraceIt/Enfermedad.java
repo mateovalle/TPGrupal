@@ -12,6 +12,11 @@ public class Enfermedad {
         this.sintomas = sintomas;
     }
 
+    public Enfermedad(String nombre) {
+        this.nombre = nombre;
+        sintomas = new ArrayList<>();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

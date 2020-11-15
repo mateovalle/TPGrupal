@@ -2,6 +2,8 @@ package TraceIt;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import util.Scanner;
 
 public class Main {
@@ -158,11 +160,14 @@ public class Main {
                 }
                 break;
             case 5:
-                //Ver Mapa
-                System.out.println("Los brotes activos son: ");
-                ArrayList<Brote> brotesActivos = EnfermedadesABM.actualizarBrotesActivos();
-                for (int i = 0; i < brotesActivos.size(); i++) {
-                    brotesActivos.get(i).print();
+                //Ver 3 Enfermedades más comunes por zona
+                String zona= usuarioActivo.getZona();
+                HashMap<Enfermedad, Integer> rankingEnfermedades= EnfermedadesABM.enfermedadesPorZona(zona, userManager);
+                for (Enfermedad enfermedad: rankingEnfermedades.keySet()) {
+                    System.out.println(": "+ enfermedad.nombre+" con una cantidad de personas de "+ rankingEnfermedades.get(enfermedad));
+                }
+                if(rankingEnfermedades.isEmpty()){
+                    System.out.println("No hay enfermedades en tu zona.");
                 }
                 menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 break;
@@ -183,8 +188,7 @@ public class Main {
         System.out.println("1. Crear evento");
         System.out.println("2. Desbloquear usuario");
         System.out.println("3. Volver al inicio");
-        System.out.println("4. Ver Mapa");
-        System.out.println("5. Cerrar Sesion");
+        System.out.println("4. Cerrar Sesion");
         int opcion = Scanner.getInt("Introduzca el numero de opción: ");
 
         switch (opcion) {
@@ -212,16 +216,6 @@ public class Main {
                 inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
 
             case 4:
-                //Ver Mapa
-                System.out.println("Los brotes activos son: ");
-                ArrayList<Brote> brotesActivos = EnfermedadesABM.actualizarBrotesActivos();
-                for (int i = 0; i < brotesActivos.size(); i++) {
-                    brotesActivos.get(i).print();
-                }
-                menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
-                break;
-
-            case 5:
                 //Cerrar Sesion
                 cerrarSesion();
             default:

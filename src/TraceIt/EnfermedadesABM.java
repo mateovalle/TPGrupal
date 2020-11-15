@@ -1,17 +1,31 @@
 package TraceIt;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import static java.util.Map.Entry.comparingByValue;
 
 public class EnfermedadesABM {
     static ArrayList<Enfermedad> listaDeEnfermedades= new ArrayList<>();
     static ArrayList<Sintoma> listaDeSintomas= new ArrayList<>();
     static ArrayList<Brote> listaDeBrotes= new ArrayList<>();
 
+    public static ArrayList<Enfermedad> getListaDeEnfermedades() {
+        return listaDeEnfermedades;
+    }
+
+    public static ArrayList<Sintoma> getListaDeSintomas() {
+        return listaDeSintomas;
+    }
+
+    public static ArrayList<Brote> getListaDeBrotes() {
+        return listaDeBrotes;
+    }
 
     public static ArrayList<Usuario> contactosEstrechosEn48HorasConLaMismaEnfermedad(Usuario usuario) {
         ArrayList<Usuario> contactosEstrechosConLaMismaEnfermedad = new ArrayList<>(); //segundo nivel
         for (Usuario otroUsuario : usuario.getContactosEstrechos().keySet()) {
             if (usuario.contactosEstrechos.get(otroUsuario).add48Hours().after(usuario.getFechaDeEnfermedad()) || usuario.contactosEstrechos.get(otroUsuario).equals(usuario.getFechaDeEnfermedad())) {
-                if (usuario.getEnfermedadActual().equals(otroUsuario.getEnfermedadActual())) {
+                if (usuario.getEnfermedadActual().equals(otroUsuario.getEnfermedadActual()) && usuario.getZona().equals(otroUsuario.getZona())) {
                     contactosEstrechosConLaMismaEnfermedad.add(otroUsuario);
                 }
             }
@@ -65,16 +79,16 @@ public class EnfermedadesABM {
         }
     }
 
-    static public ArrayList<Brote> sortBrotes (){
-        for (int i = 0; i < listaDeBrotes.size() ; i++) {
-            for (int j = 1; j < listaDeBrotes.size(); j++) {
-                if(listaDeBrotes.get(j).sizeDelBrote() > listaDeBrotes.get(j-1).sizeDelBrote()){
-                    Brote broteMayor = listaDeBrotes.get(j);
-                    listaDeBrotes.set(j,listaDeBrotes.get(j-1));
-                    listaDeBrotes.set(j-1, broteMayor);
+    static public ArrayList<Brote> sortBrotes (ArrayList<Brote> brotes){
+        for (int i = 0; i < brotes.size() ; i++) {
+            for (int j = 1; j < brotes.size(); j++) {
+                if(brotes.get(j).sizeDelBrote() > brotes.get(j-1).sizeDelBrote()){
+                    Brote broteMayor = brotes.get(j);
+                    brotes.set(j,brotes.get(j-1));
+                    brotes.set(j-1, broteMayor);
                 }
             }
-        } return listaDeBrotes;
+        } return brotes;
     }
 
     static public void llenarListaEnfermedades(ArrayList<String[]> enfermedades){
@@ -134,5 +148,44 @@ public class EnfermedadesABM {
             Brote brote = new Brote(usuariosEnBrote,enfermedad,zona);
             listaDeBrotes.add(brote);
         }
+    }
+    static public HashMap<Enfermedad, Integer> enfermedadesPorZona(String zona, UserManager usermanager) {
+        ArrayList<Usuario> usuariosEnZona = new ArrayList<>();
+        HashMap<Enfermedad, Integer> enfermedadesEnZona = new HashMap<>();
+        for (int i = 0; i < usermanager.getListaDeUsuarios().size(); i++) {
+            if (usermanager.getListaDeUsuarios().get(i).getZona().equals(zona)) {
+                usuariosEnZona.add(usermanager.getListaDeUsuarios().get(i));
+            }
+        }
+
+        for (int i = 0; i < listaDeEnfermedades.size(); i++) {
+            enfermedadesEnZona.put(listaDeEnfermedades.get(i), 0);
+        }
+        for (int i = 0; i < usuariosEnZona.size(); i++) {
+            if (usuariosEnZona.get(i).enfermedadActual != null) {
+                enfermedadesEnZona.replace(usuariosEnZona.get(i).enfermedadActual, enfermedadesEnZona.get(usuariosEnZona.get(i).enfermedadActual) + 1);
+            }
+        }
+        HashMap<Enfermedad, Integer> toReturn = new HashMap<>();
+        while (toReturn.size()<3 || enfermedadesEnZona.size()==0 ){
+            Integer maxValue = 0;
+            for (Enfermedad enfermedad : enfermedadesEnZona.keySet()) {
+                if (enfermedadesEnZona.get(enfermedad) >= maxValue) {
+                    maxValue = enfermedadesEnZona.get(enfermedad);
+                }
+            }
+            for (Enfermedad enfermedad : enfermedadesEnZona.keySet()) {
+                if (enfermedadesEnZona.get(enfermedad) == maxValue) {
+                    toReturn.put(enfermedad, enfermedadesEnZona.get(enfermedad));
+                    enfermedadesEnZona.remove(enfermedad);
+                }
+            }
+        }
+        return toReturn;
+    }
+    static public LinkedHashMap<Enfermedad, Integer> sortRankingDeEnfermedades(LinkedHashMap<Enfermedad, Integer> rankingEnfermedades) {
+        LinkedHashMap<Enfermedad, Integer> toReturn = new LinkedHashMap<>();
+        rankingEnfermedades.entrySet().stream().sorted(comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return rankingEnfermedades;
     }
 }
