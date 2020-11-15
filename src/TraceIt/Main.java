@@ -115,6 +115,7 @@ public class Main {
                         Solicitud solicitud= usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud);
                         if(SioNo2==0){
                             usuarioActivo.contestarSolicitud(solicitud, userManager, true);
+                            userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
                         }else if(SioNo2== 1){
                             usuarioActivo.contestarSolicitud(solicitud,userManager, false);
                             userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
@@ -155,6 +156,8 @@ public class Main {
                 Sintoma sintomaAELiminar = buscarSintoma(nombre);
                 if (sintomaAELiminar != null) {
                     usuarioActivo.darDeBajaSintoma(sintomaAELiminar);
+                    userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
+                    menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 } else {
                     menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 }
@@ -173,7 +176,7 @@ public class Main {
                 break;
             case 6:
                 //Cerrar sesion
-                cerrarSesion();
+                cerrarSesion(userManager);
                 break;
 
             default:
@@ -217,7 +220,7 @@ public class Main {
 
             case 4:
                 //Cerrar Sesion
-                cerrarSesion();
+                cerrarSesion(userManager);
             default:
                 System.out.println("El valor ingresado no corresponde a ninguna opción, intente nuevamente");
                 menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
@@ -325,8 +328,9 @@ public class Main {
    }
 
     //Cerrar Sesion
-    public static void cerrarSesion(){
+    public static void cerrarSesion(UserManager userManager){
         //cerrar sesion guardando
+        userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
         System.out.println("¡Gracias por usar nuestro programa!");
         System.exit(0);
     }

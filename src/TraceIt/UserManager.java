@@ -52,18 +52,18 @@ public class UserManager {
                 for (int j = 0; j < array.length; j++) {
                     String[] array2 = array[j].split("_");
                     Sintoma sintoma = Main.buscarSintoma(array2[0]);
-                    Date fecha = new Date(array2[1]);
-                    sintomas.put(sintoma, fecha);
+                    Date fecha1 = new Date(array2[1]);
+                    sintomas.put(sintoma, fecha1);
                 }
             }
             HashMap<Usuario, Date> contactoEstrecho = new HashMap<>();
             if(!infoDeUsuarios.get(i)[9].equals("null_null")){
-                String[] array3 = infoDeUsuarios.get(i)[8].split(";");
+                String[] array3 = infoDeUsuarios.get(i)[9].split(";");
                 for (int j = 0; j < array3.length; j++) {
                     String[] array4 = array3[j].split("_");
                     Usuario usuario = Main.buscarUsuario(array4[0],this);
-                    Date fecha = new Date(array4[1]);
-                    contactoEstrecho.put(usuario, fecha);
+                    Date fecha2 = new Date(array4[1]);
+                    contactoEstrecho.put(usuario, fecha2);
                 }
             }
 

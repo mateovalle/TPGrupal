@@ -46,17 +46,17 @@ public class FileManager {
                     string7 = usuario.getFechaDeEnfermedad().toString();
                 }
                 String string8="null_null";
-                for(Sintoma sintoma:usuario.getSintomas().keySet()) {
-                    if(sintoma!=null){
-                        string8 = "";
+                if(!usuario.getSintomas().isEmpty()){
+                    string8 = "";
+                    for(Sintoma sintoma:usuario.getSintomas().keySet()) {
                         string8 +=sintoma.nombre + "_";
                         string8 += usuario.getSintomas().get(sintoma).toString() + ";";
                     }
                 }
                 String string9="null_null";
-                for(Usuario otroUsuario:usuario.getContactosEstrechos().keySet()) {
-                    if(otroUsuario!=null){
-                        string9 = "";
+                if(!usuario.getContactosEstrechos().isEmpty()){
+                    string9 = "";
+                    for(Usuario otroUsuario:usuario.getContactosEstrechos().keySet()) {
                         string9 +=otroUsuario.getCuil() + "_";
                         string9 += usuario.getContactosEstrechos().get(otroUsuario).toString() + ";";
                     }

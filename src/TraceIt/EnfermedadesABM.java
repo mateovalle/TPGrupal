@@ -97,7 +97,17 @@ public class EnfermedadesABM {
             for (int j = 1; j <enfermedades.get(i).length ; j++) {
                 String[] sintomasDeEnfemedad =enfermedades.get(i)[1].split(";");
                 for (int k = 0; k < sintomasDeEnfemedad.length; k++) {
-                    sintomas.add(new Sintoma(sintomasDeEnfemedad[k]));
+                    Sintoma sintoma = new Sintoma(sintomasDeEnfemedad[k]);
+                    for (int l = 0; l < listaDeEnfermedades.size(); l++) {
+                        for (int m = 0; m < listaDeEnfermedades.get(l).sintomas.size(); m++) {
+                            if(sintoma.getNombre().equals(listaDeEnfermedades.get(l).sintomas.get(m).getNombre())){
+                                sintoma = listaDeEnfermedades.get(l).sintomas.get(m);
+                            }
+                        }
+                    }
+                    if(!sintomas.contains(sintoma)){
+                        sintomas.add(sintoma);
+                    }
                 }
             }
             Enfermedad enfermedad = new Enfermedad(enfermedades.get(i)[0], sintomas);
@@ -106,7 +116,7 @@ public class EnfermedadesABM {
         llenarListaDeSintomas();
     }
     private static void llenarListaDeSintomas(){
-        for (int i = 1; i < listaDeEnfermedades.size(); i++) {
+        for (int i = 0; i < listaDeEnfermedades.size(); i++) {
             for (int j = 0; j < listaDeEnfermedades.get(i).sintomas.size(); j++) {
                 if(!listaDeSintomas.contains(listaDeEnfermedades.get(i).sintomas.get(j))){
                     listaDeSintomas.add(listaDeEnfermedades.get(i).sintomas.get(j));
@@ -182,10 +192,5 @@ public class EnfermedadesABM {
             }
         }
         return toReturn;
-    }
-    static public LinkedHashMap<Enfermedad, Integer> sortRankingDeEnfermedades(LinkedHashMap<Enfermedad, Integer> rankingEnfermedades) {
-        LinkedHashMap<Enfermedad, Integer> toReturn = new LinkedHashMap<>();
-        rankingEnfermedades.entrySet().stream().sorted(comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        return rankingEnfermedades;
     }
 }

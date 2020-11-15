@@ -12,9 +12,11 @@ import java.util.LinkedHashMap;
 
 import static org.junit.Assert.*;
 
-public class EnfermedadesABMTest{
+public class EnfermedadesABMTest {
 
     FileManager ansesReader;
+}
+    /*
     FileManager userReader ;
     FileManager adminReader;
     FileManager solicitudReader;
@@ -70,3 +72,5 @@ public class EnfermedadesABMTest{
     }
 
 }
+
+     */
