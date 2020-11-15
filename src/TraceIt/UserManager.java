@@ -57,6 +57,7 @@ public class UserManager {
                 }
             }
             HashMap<Usuario, Date> contactoEstrecho = new HashMap<>();
+            /*
             if(!infoDeUsuarios.get(i)[9].equals("null_null")){
                 String[] array3 = infoDeUsuarios.get(i)[9].split(";");
                 for (int j = 0; j < array3.length; j++) {
@@ -66,9 +67,26 @@ public class UserManager {
                     contactoEstrecho.put(usuario, fecha2);
                 }
             }
+             */
+
 
             Usuario usuario= new Usuario(cuil, cel ,zona,nombre,nroRechazos,estaBloqueado,enfermedadActual,fechaDeEnfermedad,sintomas,contactoEstrecho);
             listaDeUsuarios.add(usuario);
+        }
+
+        for (int i = 1; i < infoDeUsuarios.size(); i++) {
+            Usuario usuario = listaDeUsuarios.get(i-1);
+            HashMap<Usuario,Date> contactoEstrecho = new HashMap<>();
+            if(!infoDeUsuarios.get(i)[9].equals("null_null")){
+                String[] array3 = infoDeUsuarios.get(i)[9].split(";");
+                for (int j = 0; j < array3.length; j++) {
+                    String[] array4 = array3[j].split("_");
+                    Usuario otroUsuario = Main.buscarUsuario(array4[0],this);
+                    Date fecha2 = new Date(array4[1]);
+                    contactoEstrecho.put(usuario, fecha2);
+                }
+            }
+            usuario.contactosEstrechos = contactoEstrecho;
         }
     }
 

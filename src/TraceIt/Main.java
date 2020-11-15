@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import util.Scanner;
+//
 
 public class Main {
     static FileManager ansesReader = new FileManager("src/TraceIt/ANSES");
@@ -33,11 +34,11 @@ public class Main {
         }
         userManager.repartirAdvertencias();
 
-        inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
+        inicio(userManager, anses, usuarioActivo, administradorActivo);
 
     }
     //Menus
-    static void inicio(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo, FileManager ansesReader) throws Exception{
+    static void inicio(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception{
         System.out.println("1. Ingresar como administrador");
         System.out.println("2. Ingresar como usuario");
         System.out.println("3. Crear un nuevo usuario");
@@ -53,14 +54,15 @@ public class Main {
                 entrarComoUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 break;
             case 3:
-                crearNuevoUsuario(userManager, ansesReader,anses,usuarioActivo,administradorActivo);
+                crearNuevoUsuario(userManager,anses,usuarioActivo,administradorActivo);
                 break;
             case 4:
+                System.out.println("Gracias por usar nuestro programa!");
                 System.exit(0);
                 break;
             default:
                 System.out.println("Comando invalido, pruebe de nuevo.");
-                inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
+                inicio(userManager, anses, usuarioActivo, administradorActivo);
                 break;
         }
     }
@@ -166,17 +168,18 @@ public class Main {
                 //Ver 3 Enfermedades más comunes por zona
                 String zona= usuarioActivo.getZona();
                 HashMap<Enfermedad, Integer> rankingEnfermedades= EnfermedadesABM.enfermedadesPorZona(zona, userManager);
-                for (Enfermedad enfermedad: rankingEnfermedades.keySet()) {
-                    System.out.println(": "+ enfermedad.nombre+" con una cantidad de personas de "+ rankingEnfermedades.get(enfermedad));
-                }
                 if(rankingEnfermedades.isEmpty()){
                     System.out.println("No hay enfermedades en tu zona.");
+                }else{
+                    for (Enfermedad enfermedad: rankingEnfermedades.keySet()) {
+                        System.out.println(": "+ enfermedad.nombre+" con una cantidad de personas de "+ rankingEnfermedades.get(enfermedad));
+                    }
                 }
                 menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 break;
             case 6:
                 //Cerrar sesion
-                cerrarSesion(userManager);
+                cerrarSesion(userManager, anses, usuarioActivo, administradorActivo);
                 break;
 
             default:
@@ -216,11 +219,11 @@ public class Main {
 
             case 3:
                 //Volver al Inicio
-                inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
+                inicio(userManager, anses, usuarioActivo, administradorActivo);
 
             case 4:
                 //Cerrar Sesion
-                cerrarSesion(userManager);
+                cerrarSesion(userManager, anses, usuarioActivo, administradorActivo);
             default:
                 System.out.println("El valor ingresado no corresponde a ninguna opción, intente nuevamente");
                 menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
@@ -243,7 +246,7 @@ public class Main {
             }
         }
         System.out.println("Usuario o contraseña incorrecta.");
-        inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
+        inicio(userManager, anses, usuarioActivo, administradorActivo);
 
     }
 
@@ -255,21 +258,21 @@ public class Main {
                 menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
             }
         }
-        inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
+        inicio(userManager, anses, usuarioActivo, administradorActivo);
     }
 
     //Creadores
 
-    static void crearNuevoUsuario(UserManager userManager, FileManager ansesReader, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception{
+    static void crearNuevoUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception{
         String cuilOCelular = Scanner.getString("Ingrese su numero de telefono o cuil: ");
         if(buscarUsuario(cuilOCelular,userManager)!=null){
-            inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
+            inicio(userManager, anses, usuarioActivo, administradorActivo);
         } else {
             String[] datosAnses = buscarEnAnses(cuilOCelular,ansesReader);
             if(datosAnses != null){
                 userManager.crearUsuario(datosAnses[0],datosAnses[1],datosAnses[2],datosAnses[3]);
                 ansesReader.writeUsersToFile(userManager,"src/TraceIt/Users");
-                inicio(userManager, anses, usuarioActivo, administradorActivo, ansesReader);
+                inicio(userManager, anses, usuarioActivo, administradorActivo);
             } else{
                 System.out.println("esta entrando acá");
             }
@@ -328,11 +331,10 @@ public class Main {
    }
 
     //Cerrar Sesion
-    public static void cerrarSesion(UserManager userManager){
+    public static void cerrarSesion(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception {
         //cerrar sesion guardando
         userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
-        System.out.println("¡Gracias por usar nuestro programa!");
-        System.exit(0);
+        inicio(userManager,anses,usuarioActivo,administradorActivo);
     }
 
     /*Crear nuevo usario

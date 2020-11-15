@@ -124,7 +124,6 @@ public class EnfermedadesABM {
             }
         }
     }
-
     static ArrayList<Brote> actualizarBrotesActivos(){ //Un brote se desactiva cuando ninguna persona del brote sigue teniendo esa enfermedad
         for (int i = 0; i < listaDeBrotes.size(); i++) {
             int count = 0;
@@ -167,7 +166,6 @@ public class EnfermedadesABM {
                 usuariosEnZona.add(usermanager.getListaDeUsuarios().get(i));
             }
         }
-
         for (int i = 0; i < listaDeEnfermedades.size(); i++) {
             enfermedadesEnZona.put(listaDeEnfermedades.get(i), 0);
         }
@@ -177,7 +175,7 @@ public class EnfermedadesABM {
             }
         }
         HashMap<Enfermedad, Integer> toReturn = new HashMap<>();
-        while (toReturn.size()<3 || enfermedadesEnZona.size()==0 ){
+        while (toReturn.size()<3 || enfermedadesEnZona.size()<=0 ){
             Integer maxValue = 0;
             for (Enfermedad enfermedad : enfermedadesEnZona.keySet()) {
                 if (enfermedadesEnZona.get(enfermedad) >= maxValue) {
