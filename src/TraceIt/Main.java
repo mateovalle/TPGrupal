@@ -33,7 +33,6 @@ public class Main {
             userManager.advertencias.add(advertencia);
         }
         userManager.repartirAdvertencias();
-
         inicio(userManager, anses, usuarioActivo, administradorActivo);
 
     }
@@ -57,6 +56,7 @@ public class Main {
                 crearNuevoUsuario(userManager,anses,usuarioActivo,administradorActivo);
                 break;
             case 4:
+                userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
                 System.out.println("Gracias por usar nuestro programa!");
                 System.exit(0);
                 break;
@@ -72,7 +72,7 @@ public class Main {
         System.out.println("2. Revisar y contestar solicitudes de contacto estrecho");
         System.out.println("3. Declarar sintoma");
         System.out.println("4. Eliminar sintoma");
-        System.out.println("5. Ver Brotes Activos");
+        System.out.println("5. Ver Ranking de Enfermedades");
         System.out.println("6. Cerrar sesion");
 
         int n = Scanner.getInt("");
@@ -146,6 +146,7 @@ public class Main {
                     usuarioActivo.declararSintoma(fechaDelSintoma, nombreSintoma, userManager);
                     advertenciaReader.writeAdvertenciaToFile(userManager);
                     userReader.writeUsersToFile(userManager, "src/TraceIt/Users");
+                    brotesReader.writeBrotesToFile();
                 }else{
                     System.out.println("El sintoma no se encontro o ya fue declarado");
                 }

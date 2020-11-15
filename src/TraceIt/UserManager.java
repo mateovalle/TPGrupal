@@ -39,13 +39,6 @@ public class UserManager {
             String nombre=infoDeUsuarios.get(i)[3];
             int nroRechazos=Integer.parseInt(infoDeUsuarios.get(i)[4]);
             boolean estaBloqueado=Boolean.parseBoolean(infoDeUsuarios.get(i)[5]);
-            Enfermedad enfermedadActual = Main.buscarEnfermedad(infoDeUsuarios.get(i)[6]);
-            Date fechaDeEnfermedad;
-            if(infoDeUsuarios.get(i)[7].equals("null")){
-                fechaDeEnfermedad=null;
-            }else{
-                fechaDeEnfermedad=new Date(infoDeUsuarios.get(i)[7]);
-            }
             HashMap<Sintoma, Date> sintomas = new HashMap<>();
             if(!infoDeUsuarios.get(i)[8].equals("null_null")){
                 String[] array = infoDeUsuarios.get(i)[8].split(";");
@@ -56,21 +49,25 @@ public class UserManager {
                     sintomas.put(sintoma, fecha1);
                 }
             }
-            HashMap<Usuario, Date> contactoEstrecho = new HashMap<>();
+            Date fechaDeEnfermedad=null;
             /*
-            if(!infoDeUsuarios.get(i)[9].equals("null_null")){
-                String[] array3 = infoDeUsuarios.get(i)[9].split(";");
-                for (int j = 0; j < array3.length; j++) {
-                    String[] array4 = array3[j].split("_");
-                    Usuario usuario = Main.buscarUsuario(array4[0],this);
-                    Date fecha2 = new Date(array4[1]);
-                    contactoEstrecho.put(usuario, fecha2);
-                }
+            if(infoDeUsuarios.get(i)[7].equals("null")){
+                fechaDeEnfermedad=null;
+            }else{
+                fechaDeEnfermedad=new Date(infoDeUsuarios.get(i)[7]);
             }
              */
-
+            Enfermedad enfermedadActual = null;
+            HashMap<Usuario, Date> contactoEstrecho = new HashMap<>();
 
             Usuario usuario= new Usuario(cuil, cel ,zona,nombre,nroRechazos,estaBloqueado,enfermedadActual,fechaDeEnfermedad,sintomas,contactoEstrecho);
+            usuario.fechaDeEnfermedad = new Date("01/01/0001");
+            for (Date fecha : usuario.getSintomas().values()){
+                if(usuario.fechaDeEnfermedad.before(fecha)){
+                    usuario.fechaDeEnfermedad=fecha;
+                }
+            }
+            usuario.enfermedadActual = DetectorDeEnfermedades.detectarEnfermedad(usuario);
             listaDeUsuarios.add(usuario);
         }
 

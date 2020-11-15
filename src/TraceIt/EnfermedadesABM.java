@@ -175,7 +175,7 @@ public class EnfermedadesABM {
             }
         }
         HashMap<Enfermedad, Integer> toReturn = new HashMap<>();
-        while (toReturn.size()<3 || enfermedadesEnZona.size()<=0 ){
+        while (toReturn.size()<3 || enfermedadesEnZona.size()==toReturn.size() ){
             Integer maxValue = 0;
             for (Enfermedad enfermedad : enfermedadesEnZona.keySet()) {
                 if (enfermedadesEnZona.get(enfermedad) >= maxValue) {
