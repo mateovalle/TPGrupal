@@ -18,4 +18,8 @@ public class Advertencia {
     public Usuario getUsuarioQueEnviaAdvertencia() {
         return usuarioQueEnviaAdvertencia;
     }
+
+    public void print() {
+        System.out.println(usuarioQueEnviaAdvertencia.getNombre() + " a tenido mas de dos sintomas el " + fecha.toString());
+    }
 }

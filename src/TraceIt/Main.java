@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import util.Scanner;
-//
+//incorrecta
 
 public class Main {
     static FileManager ansesReader = new FileManager("src/TraceIt/ANSES");
@@ -68,7 +68,11 @@ public class Main {
     }
 
     static void menuDeUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception {
-        System.out.println("1. Declarar contacto estrecho");
+        System.out.println("\nAdvertencias:  ");
+        for (int i = 0; i < usuarioActivo.getAdvertencias().size(); i++) {
+            usuarioActivo.getAdvertencias().get(i).print();
+        }
+        System.out.println("\n1. Declarar contacto estrecho");
         System.out.println("2. Revisar y contestar solicitudes de contacto estrecho");
         System.out.println("3. Declarar sintoma");
         System.out.println("4. Eliminar sintoma");
@@ -84,14 +88,14 @@ public class Main {
                     System.out.println("Estás bloqueado, no puedes mandar solicitudes.");
                     menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                 }else {
-                    String cuilOCelular = Scanner.getString("Ingrese el cuil o celular de la persona con la que tuvo contacto estrecho: ");
+                    String cuilOCelular = Scanner.getString("Ingrese el cuil o celular de la persona con la que tuvo contacto estrecho:  ");
                     Usuario otroUsuario = buscarUsuario(cuilOCelular, userManager);
                     if (otroUsuario == null) {
                         System.out.println("No se encontro el usuario.");
                         menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                     } else {
-                        String fecha1 = Scanner.getString("Ingrese el primer dia de su encuentro, separado por /: ");
-                        String fecha2 = Scanner.getString("Ingrese el ultimo dia de su encuentro, separado por /: ");
+                        String fecha1 = Scanner.getString("Ingrese el primer dia de su encuentro, separado por /:  ");
+                        String fecha2 = Scanner.getString("Ingrese el ultimo dia de su encuentro, separado por /:  ");
                         Date dateStart = new Date(fecha1);
                         Date dateEnd = new Date(fecha2);
                         Solicitud solicitud = new Solicitud(usuarioActivo, otroUsuario, dateStart, dateEnd);
@@ -106,14 +110,14 @@ public class Main {
                 for (int i = 0; i < usuarioActivo.solicitudesRecibidas.size(); i++) {
                     System.out.println(usuarioActivo.solicitudesRecibidas.get(i).toString());
                 }
-                int SioNo = Scanner.getInt("\n Ingrese 0 si desea contestar a alguna solicitud, o ingrese 1 para volver al menu: ");
+                int SioNo = Scanner.getInt("\n Ingrese 0 si desea contestar a alguna solicitud, o ingrese 1 para volver al menu:  ");
                 if(SioNo==0) {
                     for (int i = 0; i < usuarioActivo.solicitudesRecibidas.size(); i++) {
                         System.out.println(i+". "+usuarioActivo.solicitudesRecibidas.get(i).toString());
                     }
-                    int nroDeSolicitud= Scanner.getInt("Que solicitud desea contestar: "); // Agregar excepción por si se elige una solicitud inexistente -Pedro
+                    int nroDeSolicitud= Scanner.getInt("Que solicitud desea contestar:  "); // Agregar excepción por si se elige una solicitud inexistente -Pedro
                     if(nroDeSolicitud<= usuarioActivo.solicitudesRecibidas.size()){
-                        int SioNo2=Scanner.getInt("Ingrese 0 si hubo contacto estrecho, ingrese 1 si no hubo contacto estrecho: ");
+                        int SioNo2=Scanner.getInt("Ingrese 0 si hubo contacto estrecho, ingrese 1 si no hubo contacto estrecho:  ");
                         Solicitud solicitud= usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud);
                         if(SioNo2==0){
                             usuarioActivo.contestarSolicitud(solicitud, userManager, true);
@@ -138,8 +142,8 @@ public class Main {
                 break;
             case 3:
                 //Declarar Sintoma
-                String nombreSintoma = Scanner.getString("Cual es el nombre del sintoma que desea declarar");
-                String fecha = Scanner.getString("Ingrese la fecha de hoy separado por '/'");
+                String nombreSintoma = Scanner.getString("Cual es el nombre del sintoma que desea declarar:  ");
+                String fecha = Scanner.getString("Ingrese la fecha de hoy separado por '/' ");
                 Date fechaDelSintoma = new Date(fecha);
                 Sintoma sintomaADeclarar = buscarSintoma(nombreSintoma);
                 if (sintomaADeclarar != null && !usuarioActivo.getSintomas().containsKey(sintomaADeclarar)) {
@@ -172,8 +176,8 @@ public class Main {
                 if(rankingEnfermedades.isEmpty()){
                     System.out.println("No hay enfermedades en tu zona.");
                 }else{
-                    for (Enfermedad enfermedad: rankingEnfermedades.keySet()) {
-                        System.out.println(": "+ enfermedad.nombre+" con una cantidad de personas de "+ rankingEnfermedades.get(enfermedad));
+                    for (Enfermedad enfermedad:  rankingEnfermedades.keySet()) {
+                        System.out.println(":  "+ enfermedad.nombre+" con una cantidad de personas de "+ rankingEnfermedades.get(enfermedad));
                     }
                 }
                 menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
@@ -192,28 +196,28 @@ public class Main {
 
     static void menuDeAdministrador(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception {
 
-        System.out.println("1. Crear evento");
+        System.out.println("\n1. Crear evento");
         System.out.println("2. Desbloquear usuario");
         System.out.println("3. Volver al inicio");
         System.out.println("4. Cerrar Sesion");
-        int opcion = Scanner.getInt("Introduzca el numero de opción: ");
+        int opcion = Scanner.getInt("Introduzca el numero de opción:  ");
 
         switch (opcion) {
             case 1:
                 //Crear Evento
-                String nombre = Scanner.getString("Introduzca el nombre del sintoma: ");
+                String nombre = Scanner.getString("Introduzca el nombre del sintoma:  ");
                 Sintoma Sintoma = buscarSintoma(nombre);
                 if (Sintoma == null) {
-                    administradorActivo.crearSintoma(nombre);
+                    administradorActivo.crearSintoma(nombre, enfermedadesReader);
                 } else {
-                    System.out.println("El sintoma creado ya existe.");
+                    System.out.println("El sintoma que intenta crear ya existe.");
                     menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
                 }
                 break;
 
             case 2:
                 //Desbloquear Usuario
-                String cuiloCelular = Scanner.getString("introduzca el Cuil o el Celular del usuario a desbloquear: ");
+                String cuiloCelular = Scanner.getString("Introduzca el Cuil o el Celular del usuario a desbloquear:  ");
                 Usuario usuarioaDesbloquear = buscarUsuario(cuiloCelular, userManager);
                 administradorActivo.desbloquearUsuario(usuarioaDesbloquear);
                 break;
@@ -236,23 +240,23 @@ public class Main {
 
     static void entrarComoAdministrador(UserManager userManager, ArrayList<String> anses, Usuario
             usuarioActivo, Administrador administradorActivo) throws Exception {
-        String usuario = Scanner.getString("Ingrese su nombre de usuario: ");
-        String contraseña = Scanner.getString("Ingrese su contraseña: ");
+        String usuario = Scanner.getString("\nIngrese su nombre de usuario:  ");
+        String contraseña = Scanner.getString("Ingrese su contraseña:  ");
         for (int i = 0; i < userManager.listaDeAdministradores.size(); i++) {
             if (usuario.equals(userManager.listaDeAdministradores.get(i).usuario)) {
                 if (contraseña.equals(userManager.listaDeAdministradores.get(i).contraseña)) {
                     administradorActivo = buscarAdministrador(usuario, contraseña, userManager);
                     menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
                 }
+            }else {
+                System.out.println("Usuario o contraseña incorrecta.");
+                inicio(userManager, anses, usuarioActivo, administradorActivo);
             }
         }
-        System.out.println("Usuario o contraseña incorrecta.");
-        inicio(userManager, anses, usuarioActivo, administradorActivo);
-
     }
 
     static void entrarComoUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception {
-        String cuilOContraseña = Scanner.getString("Ingrese su cuil o celular: ");
+        String cuilOContraseña = Scanner.getString("\nIngrese su cuil o celular:  ");
         for (int i = 0; i < userManager.listaDeUsuarios.size(); i++) {
             if (cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).celular) || cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).cuil)) {
                 usuarioActivo = userManager.listaDeUsuarios.get(i);
@@ -265,7 +269,7 @@ public class Main {
     //Creadores
 
     static void crearNuevoUsuario(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception{
-        String cuilOCelular = Scanner.getString("Ingrese su numero de telefono o cuil: ");
+        String cuilOCelular = Scanner.getString("\nIngrese su numero de telefono o cuil:  ");
         if(buscarUsuario(cuilOCelular,userManager)!=null){
             inicio(userManager, anses, usuarioActivo, administradorActivo);
         } else {
@@ -274,8 +278,6 @@ public class Main {
                 userManager.crearUsuario(datosAnses[0],datosAnses[1],datosAnses[2],datosAnses[3]);
                 ansesReader.writeUsersToFile(userManager,"src/TraceIt/Users");
                 inicio(userManager, anses, usuarioActivo, administradorActivo);
-            } else{
-                System.out.println("esta entrando acá");
             }
         }
     }

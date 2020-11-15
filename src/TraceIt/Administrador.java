@@ -22,18 +22,16 @@ public class Administrador {
         usuario.estaBloqueado = true;
     }
 
-    void crearSintoma(String nombre) {
+    void crearSintoma(String nombre, FileManager enfermedadesReader) {
         Sintoma sintomaNuevo = new Sintoma(nombre);
         int cantidadDeEnfermedades = Scanner.getInt("A cuantas enfermedades pertenece?: ");
-        for (int i = 0; i < cantidadDeEnfermedades - 1; i++) {
-            String nombreEnfermedad = Scanner.getString("Introduzca el nombre de la enfermedad");
+        for (int i = 0; i < cantidadDeEnfermedades; i++) {
+            String nombreEnfermedad = Scanner.getString("Introduzca el nombre de la enfermedad: ");
             Enfermedad enfermedad = Main.buscarEnfermedad(nombreEnfermedad);
             if (enfermedad != null) {
                 enfermedad.sintomas.add(sintomaNuevo);
                 sintomaNuevo.enfermedadesRelacionadas.add(enfermedad);
-                //agregar al archivo
-            } else {
-                crearSintoma(nombre);
+                enfermedadesReader.writeEnfermedadesToFile();
             }
         }
     }

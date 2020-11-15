@@ -123,4 +123,26 @@ public class FileManager {
             }
         }
     }
+    void writeEnfermedadesToFile(){
+        ArrayList<Enfermedad> listaDeEnfermedades = EnfermedadesABM.listaDeEnfermedades;
+        if(!listaDeEnfermedades.isEmpty()){
+            try{
+                BufferedWriter bWriter = new BufferedWriter(new FileWriter(filePath));
+                bWriter.write("Enfermedad,zona,cuilsDeEnfermos");
+                for (int i = 0; i < listaDeEnfermedades.size(); i++) {
+                    String enfermedad = listaDeEnfermedades.get(i).nombre;
+                    String sintomas="";
+                    if(!listaDeEnfermedades.get(i).sintomas.isEmpty()){
+                        for(Sintoma sintoma:listaDeEnfermedades.get(i).sintomas) {
+                            sintomas +=sintoma.getNombre() + ";";
+                        }
+                    }
+                    bWriter.write("\n"+enfermedad+ ","+sintomas);
+                }
+                bWriter.close();
+            }catch (Exception e){
+                System.out.println(e);
+            }
+        }
+    }
 }
