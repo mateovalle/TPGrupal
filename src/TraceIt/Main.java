@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import jdk.swing.interop.SwingInterOpUtils;
 import util.Scanner;
-//incorrecta
 
 public class Main {
     static FileManager ansesReader = new FileManager("src/TraceIt/ANSES");
