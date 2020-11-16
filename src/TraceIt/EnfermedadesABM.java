@@ -115,6 +115,7 @@ public class EnfermedadesABM {
         }
         llenarListaDeSintomas();
     }
+
     private static void llenarListaDeSintomas(){
         for (int i = 0; i < listaDeEnfermedades.size(); i++) {
             for (int j = 0; j < listaDeEnfermedades.get(i).sintomas.size(); j++) {
@@ -160,6 +161,7 @@ public class EnfermedadesABM {
         }
         return brotesActivos;
     }
+
     static public HashMap<Enfermedad, Integer> enfermedadesPorZona(String zona, UserManager usermanager) {
         ArrayList<Usuario> usuariosEnZona = new ArrayList<>();
         HashMap<Enfermedad, Integer> enfermedadesEnZona = new HashMap<>();

@@ -54,6 +54,7 @@ public class Main {
                 break;
             case 3:
                 crearNuevoUsuario(userManager,anses,usuarioActivo,administradorActivo);
+                userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
                 break;
             case 4:
                 userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
@@ -110,6 +111,7 @@ public class Main {
                         menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                     }
                 }
+
                 break;
             case 2:
                 //Revisar y contestar Solicitudes
@@ -231,6 +233,7 @@ public class Main {
                 String cuiloCelular = Scanner.getString("Introduzca el Cuil o el Celular del usuario a desbloquear:  ");
                 Usuario usuarioaDesbloquear = buscarUsuario(cuiloCelular, userManager);
                 administradorActivo.desbloquearUsuario(usuarioaDesbloquear);
+                userReader.writeUsersToFile(userManager,"src/TraceIt/Users");
                 menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
                 break;
 
@@ -271,6 +274,7 @@ public class Main {
         for (int i = 0; i < userManager.listaDeUsuarios.size(); i++) {
             if (cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).celular) || cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).cuil)) {
                 usuarioActivo = userManager.listaDeUsuarios.get(i);
+                userManager.repartirSolicitudes();
                 menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
             }
         }
