@@ -90,6 +90,7 @@ public class FileManager {
     void writeAdvertenciaToFile(UserManager userManager){
         try {
             BufferedWriter bWriter = new BufferedWriter(new FileWriter(filePath));
+            bWriter.write("cuilEnvia,fechaAdvertencia");
             for (int i = 0; i < userManager.listaDeAdvertencias.size(); i++) {
                 String cuilEnvia = userManager.listaDeAdvertencias.get(i).getUsuarioQueEnviaAdvertencia().cuil;
                 String fecha = userManager.listaDeAdvertencias.get(i).getFecha().toString();
