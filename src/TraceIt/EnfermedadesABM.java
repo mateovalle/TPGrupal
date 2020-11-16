@@ -50,12 +50,14 @@ public class EnfermedadesABM {
                 ArrayList<Usuario> contactosEstrechosEn48HorasConLaMismaEnfermedad = contactosEstrechosEn48HorasConLaMismaEnfermedad(usuariosDelBrote.get(i));
                 for (int j = 0; j < contactosEstrechosEn48HorasConLaMismaEnfermedad.size(); j++) {
                     if (!usuariosDelBrote.contains(contactosEstrechosEn48HorasConLaMismaEnfermedad.get(j)) && !usuariosDelNivelSuperior.contains(contactosEstrechosEn48HorasConLaMismaEnfermedad.get(j))){
-                       usuariosDelNivelSuperior.add(contactosEstrechosEn48HorasConLaMismaEnfermedad.get(j));
+                        System.out.println("primer if");
+                        usuariosDelNivelSuperior.add(contactosEstrechosEn48HorasConLaMismaEnfermedad.get(j));
                     }
                 }
             }
             usuariosDelBrote.addAll(usuariosDelNivelSuperior);
             if (!usuariosDelNivelSuperior.isEmpty()){
+                System.out.println("segundo if");
                 nivelesDeContagio++;
             }
 
@@ -66,8 +68,11 @@ public class EnfermedadesABM {
         broteSinElUsuario.remove(usuario);
         for (int i = 0; i < listaDeBrotes.size(); i++) {
             if (listaDeBrotes.get(i).getUsuariosContagiados().containsAll(broteSinElUsuario)){
+                System.out.println("tercer if");
                 if( listaDeBrotes.get(i).getZona().equals(usuario.getZona())){
+                    System.out.println("cuarto if");
                     listaDeBrotes.get(i).getUsuariosContagiados().add(usuario);
+                    System.out.println("antes del return");
                     return;
                 }
             }
@@ -76,6 +81,7 @@ public class EnfermedadesABM {
         if (usuariosDelBrote.size() >= 5 && nivelesDeContagio >= 2){
             Brote nuevoBrote = new Brote(usuariosDelBrote, usuario.getEnfermedadActual(),usuario.getZona());
             listaDeBrotes.add(nuevoBrote);
+            System.out.println("El brote a sido creado");
         }
     }
 

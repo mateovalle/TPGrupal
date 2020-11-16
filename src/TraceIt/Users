@@ -1,6 +1,6 @@
 cuil,cel,zona,nombre,nroDeRechazos, estaBloqueado, enfermedadActual, fechaDeEnfermedad, Sintomas, ContactosEstrechos
-43627559,1199928585,Nordelta,Timoteo Sanchez,0,false,COVID-19,20/11/2020,fiebre_12/11/2020;cansancio_12/11/2020;tos_20/11/2020;,43627559_12/11/2020;
-43628534,1166605252,Nordelta,Pedro Elizalde,0,false,COVID-19,12/11/2020,fiebre_12/11/2020;cansancio_12/11/2020;tos_12/11/2020;,43628534_15/11/2020;
-43573888,1155884475,Nordelta,Justina Galarce,0,false,COVID-19,12/11/2020,fiebre_12/11/2020;cansancio_12/11/2020;tos_12/11/2020;,43573888_12/11/2020;
-12345678,9876543210,Nordelta,Mateo Valle,0,false,COVID-19,15/11/2020,fiebre_15/11/2020;cansancio_15/11/2020;tos_15/11/2020;,12345678_15/11/2020;
-11111111,1166998585,Nordelta, Juan Bautista Massanti,0,false,COVID-19,12/11/2020,fiebre_12/11/2020;cansancio_12/11/2020;tos_12/11/2020;,11111111_12/11/2020;
+43627559,1199928585,Nordelta,Timoteo Sanchez,0,false,COVID-19,12/11/2020,tos_12/11/2020;fiebre_12/11/2020;cansancio_12/11/2020;,43573888_12/11/2020;
+43628534,1166605252,Nordelta,Pedro Elizalde,0,false,COVID-19,12/11/2020,tos_12/11/2020;cansancio_12/11/2020;fiebre_12/11/2020;,11111111_12/11/2020;12345678_12/11/2020;
+43573888,1155884475,Nordelta,Justina Galarce,0,false,COVID-19,12/11/2020,tos_12/11/2020;cansancio_12/11/2020;fiebre_12/11/2020;,43627559_12/11/2020;12345678_12/11/2020;
+12345678,9876543210,Nordelta,Mateo Valle,0,false,COVID-19,15/11/2020,tos_15/11/2020;cansancio_15/11/2020;fiebre_15/11/2020;,43573888_12/11/2020;43628534_12/11/2020;
+11111111,1166998585,Nordelta,Juan Bautista Massanti,0,false,COVID-19,12/11/2020,tos_12/11/2020;cansancio_12/11/2020;fiebre_12/11/2020;,43628534_12/11/2020;

@@ -73,7 +73,7 @@ public class UserManager {
                     String[] array4 = array3[j].split("_");
                     Usuario otroUsuario = Main.buscarUsuario(array4[0],this);
                     Date fecha2 = new Date(array4[1]);
-                    contactoEstrecho.put(usuario, fecha2);
+                    contactoEstrecho.put(otroUsuario, fecha2);
                 }
             }
             usuario.contactosEstrechos = contactoEstrecho;
