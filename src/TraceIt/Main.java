@@ -30,7 +30,7 @@ public class Main {
         ArrayList<String[]> advertencias = advertenciaReader.getDataFromFile();
         for (int i = 1; i < advertencias.size(); i++) {
             Advertencia advertencia = new Advertencia(buscarUsuario(advertencias.get(i)[0],userManager),new Date(advertencias.get(i)[1]));
-            userManager.advertencias.add(advertencia);
+            userManager.listaDeAdvertencias.add(advertencia);
         }
         userManager.repartirAdvertencias();
         inicio(userManager, anses, usuarioActivo, administradorActivo);
@@ -238,8 +238,7 @@ public class Main {
 
     //Ingresar Como
 
-    static void entrarComoAdministrador(UserManager userManager, ArrayList<String> anses, Usuario
-            usuarioActivo, Administrador administradorActivo) throws Exception {
+    static void entrarComoAdministrador(UserManager userManager, ArrayList<String> anses, Usuario usuarioActivo, Administrador administradorActivo) throws Exception {
         String usuario = Scanner.getString("\nIngrese su nombre de usuario:  ");
         String contraseña = Scanner.getString("Ingrese su contraseña:  ");
         for (int i = 0; i < userManager.listaDeAdministradores.size(); i++) {

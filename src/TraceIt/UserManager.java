@@ -7,7 +7,7 @@ public class UserManager {
     ArrayList<Usuario> listaDeUsuarios = new ArrayList<>();
     ArrayList<Administrador> listaDeAdministradores = new ArrayList<>();
     ArrayList<Solicitud> listaSolicitudes = new ArrayList<>();
-    ArrayList<Advertencia> advertencias = new ArrayList<>();
+    ArrayList<Advertencia> listaDeAdvertencias = new ArrayList<>();
 
 
     public UserManager(){
@@ -50,13 +50,6 @@ public class UserManager {
                 }
             }
             Date fechaDeEnfermedad=null;
-            /*
-            if(infoDeUsuarios.get(i)[7].equals("null")){
-                fechaDeEnfermedad=null;
-            }else{
-                fechaDeEnfermedad=new Date(infoDeUsuarios.get(i)[7]);
-            }
-             */
             Enfermedad enfermedadActual = null;
             HashMap<Usuario, Date> contactoEstrecho = new HashMap<>();
 
@@ -110,7 +103,6 @@ public class UserManager {
             }
         }
     }
-
     public void mandarAdvertencia (ArrayList<Usuario> usuarios, Date fecha, Usuario usuarioContagiado){ // agrega advertencia al la lista de advertencias del usuario con el que estuvo
         Advertencia advertencia = new Advertencia(usuarioContagiado, fecha);
         for (int i = 0; i < usuarios.size(); i++) {
@@ -118,10 +110,10 @@ public class UserManager {
         }
     }
     public void repartirAdvertencias (){
-        for (int i = 0; i < advertencias.size(); i++) {
-            Usuario usuarioContagiado = advertencias.get(i).getUsuarioQueEnviaAdvertencia();
+        for (int i = 0; i < listaDeAdvertencias.size(); i++) {
+            Usuario usuarioContagiado = listaDeAdvertencias.get(i).getUsuarioQueEnviaAdvertencia();
             for(Usuario otroUsuario:usuarioContagiado.contactosEstrechos.keySet()){
-                otroUsuario.advertencias.add(advertencias.get(i));
+                otroUsuario.advertencias.add(listaDeAdvertencias.get(i));
             }
         }
     }

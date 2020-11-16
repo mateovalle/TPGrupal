@@ -175,7 +175,7 @@ public class EnfermedadesABM {
             }
         }
         HashMap<Enfermedad, Integer> toReturn = new HashMap<>();
-        while (toReturn.size()<3 || enfermedadesEnZona.size()==toReturn.size() ){
+        for (int i = 0; i < toReturn.size(); i++) {
             Integer maxValue = 0;
             for (Enfermedad enfermedad : enfermedadesEnZona.keySet()) {
                 if (enfermedadesEnZona.get(enfermedad) >= maxValue) {
@@ -185,7 +185,7 @@ public class EnfermedadesABM {
             for (Enfermedad enfermedad : enfermedadesEnZona.keySet()) {
                 if (enfermedadesEnZona.get(enfermedad) == maxValue) {
                     toReturn.put(enfermedad, enfermedadesEnZona.get(enfermedad));
-                    enfermedadesEnZona.remove(enfermedad);
+                    //enfermedadesEnZona.remove(enfermedad);
                 }
             }
         }
