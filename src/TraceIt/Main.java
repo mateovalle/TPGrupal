@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import jdk.swing.interop.SwingInterOpUtils;
 import util.Scanner;
 //incorrecta
 
@@ -71,6 +72,12 @@ public class Main {
         System.out.println("\nAdvertencias:  ");
         for (int i = 0; i < usuarioActivo.getAdvertencias().size(); i++) {
             usuarioActivo.getAdvertencias().get(i).print();
+        }
+        System.out.println("Brotes activos: ");
+        ArrayList<Brote> listaDeBrotes2 = EnfermedadesABM.actualizarBrotesActivos();
+        EnfermedadesABM.sortBrotes(listaDeBrotes2);
+        for (int i = 0; i < listaDeBrotes2.size(); i++) {
+            listaDeBrotes2.get(i).print();
         }
         System.out.println("\n1. Declarar contacto estrecho");
         System.out.println("2. Revisar y contestar solicitudes de contacto estrecho");
@@ -177,7 +184,9 @@ public class Main {
                     System.out.println("No hay enfermedades en tu zona.");
                 }else{
                     for (Enfermedad enfermedad:  rankingEnfermedades.keySet()) {
-                        System.out.println(":  "+ enfermedad.nombre+" con una cantidad de personas de "+ rankingEnfermedades.get(enfermedad));
+                        if(rankingEnfermedades.get(enfermedad)> 0){
+                            System.out.println(":  "+ enfermedad.nombre+" con una cantidad de personas de "+ rankingEnfermedades.get(enfermedad));
+                        }
                     }
                 }
                 menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
@@ -209,10 +218,13 @@ public class Main {
                 Sintoma Sintoma = buscarSintoma(nombre);
                 if (Sintoma == null) {
                     administradorActivo.crearSintoma(nombre, enfermedadesReader);
+                    enfermedadesReader.writeEnfermedadesToFile();
+                    menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
                 } else {
                     System.out.println("El sintoma que intenta crear ya existe.");
                     menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
                 }
+                menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
                 break;
 
             case 2:
@@ -220,6 +232,7 @@ public class Main {
                 String cuiloCelular = Scanner.getString("Introduzca el Cuil o el Celular del usuario a desbloquear:  ");
                 Usuario usuarioaDesbloquear = buscarUsuario(cuiloCelular, userManager);
                 administradorActivo.desbloquearUsuario(usuarioaDesbloquear);
+                menuDeAdministrador(userManager, anses, usuarioActivo, administradorActivo);
                 break;
 
             case 3:

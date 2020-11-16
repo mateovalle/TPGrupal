@@ -112,7 +112,7 @@ public class FileManager {
                     String zona = listaDeBrotes.get(i).getZona();
                     String cuils = "";
                     for (int j = 0; j < listaDeBrotes.get(i).getUsuariosContagiados().size()-1; j++) {
-                        cuils += listaDeBrotes.get(i).getUsuariosContagiados().get(j).getCuil()+",";
+                        cuils += listaDeBrotes.get(i).getUsuariosContagiados().get(j).getCuil()+";";
                     }
                     cuils += listaDeBrotes.get(i).getUsuariosContagiados().get(listaDeBrotes.get(i).getUsuariosContagiados().size()-1).getCuil();
                     bWriter.write("\n"+enfermedad+ ","+zona+","+cuils);
@@ -123,6 +123,7 @@ public class FileManager {
             }
         }
     }
+
     void writeEnfermedadesToFile(){
         ArrayList<Enfermedad> listaDeEnfermedades = EnfermedadesABM.listaDeEnfermedades;
         if(!listaDeEnfermedades.isEmpty()){

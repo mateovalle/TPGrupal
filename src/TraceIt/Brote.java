@@ -42,6 +42,6 @@ public class Brote {
     }
 
     public void print(){
-        System.out.println("El brote de la enfermedad" + enfermedad + " de " + zona + " tiene un tamaño de " + usuariosContagiados.size()+ " personas contagiadas.");
+        System.out.println("El brote de la enfermedad " + enfermedad.nombre + " de " + zona + " tiene un tamaño de " + usuariosContagiados.size()+ " personas contagiadas.");
     }
 }

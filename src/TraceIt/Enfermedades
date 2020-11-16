@@ -1,4 +1,4 @@
-enfermedad,sintoma1;sintoma2;sintoma3
-COVID-19,tos;cansancio;diarrea;nauseas;fiebre
-Dengue,fiebre;sarpullido;dolor de cuerpo;vomito
-Hepatitis-B,dolor abdominal;perdida de apetito;ojos color amarillo
+Enfermedad,zona,cuilsDeEnfermos
+COVID-19,tos;cansancio;diarrea;nauseas;fiebre;
+Dengue,fiebre;sarpullido;dolor de cuerpo;vomito;
+Hepatitis-B,dolor abdominal;perdida de apetito;ojos color amarillo;
