@@ -139,6 +139,7 @@ public class Main {
                         userManager.listaSolicitudes.remove(usuarioActivo.solicitudesRecibidas.get(nroDeSolicitud));
                         usuarioActivo.solicitudesRecibidas.remove(nroDeSolicitud);
                         solicitudReader.writeSolicitudToFile(userManager.listaSolicitudes);
+                        userManager.repartirSolicitudes();
                         menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
                     }else{
                         System.out.println("No ha ingresado un numero valido");
@@ -274,7 +275,6 @@ public class Main {
         for (int i = 0; i < userManager.listaDeUsuarios.size(); i++) {
             if (cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).celular) || cuilOContraseña.equals(userManager.listaDeUsuarios.get(i).cuil)) {
                 usuarioActivo = userManager.listaDeUsuarios.get(i);
-                userManager.repartirSolicitudes();
                 menuDeUsuario(userManager, anses, usuarioActivo, administradorActivo);
             }
         }
